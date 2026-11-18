@@ -106,6 +106,26 @@ button,[role="button"],select,input{ min-height:2.25rem }
 .cbtn svg{width:16px;height:16px;fill:currentColor;flex:none}
 .speedbox{display:inline-flex;align-items:center;gap:8px;color:var(--console-muted);font-size:.85rem;margin-left:4px}
 .speedbox input[type="range"]{width:110px;accent-color:var(--accent);min-height:2.25rem}
+.speedbox select{background:var(--console2);color:var(--console-ink);border:1px solid #44534c;border-radius:8px;padding:6px 8px;min-height:2.25rem;font:inherit;font-size:.88rem}
+
+/* ---------- Picker filters ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.fchip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:.86rem;font-weight:600;min-height:2.25rem}
+.fchip:hover{border-color:var(--accent)}
+.fchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.pick.hide{display:none}
+
+/* ---------- Stack & calibrate ---------- */
+.duo{display:grid;grid-template-columns:1fr 1.35fr;gap:12px;margin-top:12px}
+.duo select{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 10px;font:inherit;min-height:2.5rem;min-width:0}
+.timerrow input[type="text"]{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 10px;font:inherit;min-height:2.5rem;min-width:0}
+.eqband{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.eqband label{width:92px;flex:none;font-size:.86rem;font-weight:600}
+.eqband label small{display:block;color:var(--muted);font-weight:500;font-size:.7rem}
+.eqband input[type="range"]{flex:1;accent-color:var(--accent);min-height:2.25rem;min-width:0}
+.eqband output{width:3.6em;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;font-size:.86rem}
+.chip.light{border-color:var(--line);background:var(--surface2);color:var(--ink)}
+.chip.light:hover{border-color:var(--accent)}
 
 /* ---------- Master strip ---------- */
 .strip{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-top:14px}
@@ -143,6 +163,7 @@ footer p{margin:0 0 6px}
   .fader .fname{font-size:.72rem}
   .fader .mutehint{display:none}
   .strip,.info{grid-template-columns:1fr}
+  .duo{grid-template-columns:1fr}
   .hero-inner{padding:20px 18px 14px}
   .playbox{flex-direction:row;width:100%;justify-content:flex-start}
   #playBtn{width:68px;height:68px}
@@ -184,7 +205,17 @@ footer p{margin:0 0 6px}
   <!-- PICKER -->
   <div class="section-head">
     <h2>Soundscapes</h2>
-    <p>Eight generators, each built from ten separate channels — like the mixers on myNoise. Switch any time; your fader settings for each one are kept while you explore.</p>
+    <p>Thirteen generators, each built from ten separate channels — like the mixers on myNoise. Switch any time; your fader settings for each one are kept while you explore, and any of them can be stacked underneath another.</p>
+  </div>
+  <div class="filters" role="group" aria-label="Filter soundscapes by type">
+    <button class="fchip" data-f="all" aria-pressed="true">All 13</button>
+    <button class="fchip" data-f="nature" aria-pressed="false">Nature</button>
+    <button class="fchip" data-f="water" aria-pressed="false">Water</button>
+    <button class="fchip" data-f="weather" aria-pressed="false">Weather</button>
+    <button class="fchip" data-f="indoors" aria-pressed="false">Indoors</button>
+    <button class="fchip" data-f="travel" aria-pressed="false">Travel</button>
+    <button class="fchip" data-f="tones" aria-pressed="false">Tones &amp; noise</button>
+    <button class="fchip" id="surpriseBtn" type="button">Surprise me</button>
   </div>
   <div class="picker" id="picker" role="group" aria-label="Choose a soundscape"></div>
 
@@ -193,7 +224,7 @@ footer p{margin:0 0 6px}
     <div class="console-top">
       <div>
         <h2 id="consoleTitle">Rain on Leaves — Mixer</h2>
-        <div class="sub">Drag a fader, use ↑ / ↓ keys on a focused fader, or tap a channel name to mute it. Double-click a fader to silence it.</div>
+        <div class="sub">Drag a fader, use ↑ / ↓ keys on a focused fader, or tap a channel name to mute it. Double-click a channel name to solo it; double-click a fader to silence it.</div>
       </div>
       <div class="sub" id="activeReadout">7 of 10 channels audible</div>
     </div>
@@ -205,7 +236,13 @@ footer p{margin:0 0 6px}
       <button class="cbtn" id="muteAllBtn"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3zm13.6 3 3-3-1.4-1.4-3 3-3-3L10.8 9l3 3-3 3 1.4 1.4 3-3 3 3 1.4-1.4-3-3z"/></svg>Mute all</button>
       <button class="cbtn" id="animateBtn" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 18V8h2.5v10H4zm6.75 0V4h2.5v14h-2.5zm6.75 0v-7H20v7h-2.5z"/></svg>Animate</button>
       <span class="speedbox" id="speedBox" hidden>
-        <label for="animSpeed">Drift speed</label>
+        <label for="animMode">Mode</label>
+        <select id="animMode">
+          <option value="drift">Drift — random walk</option>
+          <option value="wave">Wave — sliders in sequence</option>
+          <option value="breathe">Breathe — all rise &amp; fall together</option>
+        </select>
+        <label for="animSpeed">Speed</label>
         <input type="range" id="animSpeed" min="1" max="10" step="1" value="4">
       </span>
       <button class="cbtn" id="soloBtn" hidden></button>
@@ -238,7 +275,10 @@ footer p{margin:0 0 6px}
         <button class="tbtn" id="timerBtn" aria-pressed="false">Start</button>
       </div>
       <div id="timerReadout" aria-live="polite"></div>
-      <p>When the timer ends, the mix fades out and playback stops.</p>
+      <div class="timerrow" style="margin-top:10px">
+        <button class="tbtn" id="bellBtn" aria-pressed="false">Meditation bell · every 5 min</button>
+      </div>
+      <p style="margin-top:8px">When the timer ends, the mix fades out and playback stops. The bell rings softly over any scene on its own schedule — a mindfulness anchor that never stops the sound.</p>
     </div>
     <div class="card">
       <label class="lab">Your mix</label>
@@ -246,8 +286,36 @@ footer p{margin:0 0 6px}
         <button class="tbtn primary" id="saveMixBtn">Save this mix</button>
         <button class="tbtn" id="copyMixBtn">Copy mix settings</button>
       </div>
+      <div class="timerrow" style="margin-top:8px">
+        <input type="text" id="mixCodeIn" placeholder="Paste a copied mix here to load it" aria-label="Paste a copied mix to load it">
+        <button class="tbtn" id="loadMixBtn">Load mix</button>
+      </div>
       <div id="mixMsg" aria-live="polite"></div>
       <p>Saved mixes appear as extra presets above the faders for this session. Copying gives you the fader values as text you can keep or share.</p>
+    </div>
+  </div>
+
+  <!-- STACK & CALIBRATE -->
+  <div class="duo">
+    <div class="card">
+      <label class="lab" for="layerSel">Stack a second generator</label>
+      <div class="timerrow">
+        <select id="layerSel" aria-label="Scene to layer underneath"></select>
+        <button class="tbtn" id="layerBtn" aria-pressed="false">Add layer</button>
+      </div>
+      <div class="volrow" style="margin-top:10px">
+        <label for="layerVol" style="font-size:.85rem;color:var(--muted);flex:none">Layer level</label>
+        <input type="range" class="master" id="layerVol" min="0" max="100" value="55" aria-label="Layer volume">
+        <output id="layerOut" for="layerVol">55%</output>
+      </div>
+      <div id="layerMsg" aria-live="polite" style="margin-top:6px;font-size:.88rem;color:var(--muted);min-height:1.3em"></div>
+      <p style="margin-top:4px">The myNoise habit: two generators at once — rain under a café, a fire behind a blizzard, thunder rolling beneath the night chorus. The layer plays that scene's own saved mix; open it as the main scene any time to adjust its faders, then come back.</p>
+    </div>
+    <div class="card">
+      <label class="lab">Calibrate — one EQ for everything</label>
+      <div id="eqBands"></div>
+      <div class="mixrow" style="margin-top:10px" id="eqPresets"></div>
+      <p style="margin-top:8px">myNoise's core idea: the same mix sounds different on every speaker and every pair of ears, so calibrate once and every generator follows. Small speakers need the bass lift; the highs lift counters dull earbuds or age-related roll-off; the 6 kHz notch can duck the band where a tinnitus tone sits.</p>
     </div>
   </div>
 
@@ -271,7 +339,8 @@ footer p{margin:0 0 6px}
         <li><b>Start from a preset</b>, then nudge two or three faders — small changes shift the whole mood.</li>
         <li><b>Animate</b> lets the faders drift slowly on their own, the way real weather changes over an hour.</li>
         <li><b>Pure Noise</b> is a spectrum mixer: its faders are frequency bands from 32 Hz to 16 kHz. Pink and Brown presets are the classic sleep and focus shapes.</li>
-        <li>Tap a channel name to <b>mute just that channel</b>; tap again to bring it back.</li>
+        <li>Tap a channel name to <b>mute just that channel</b>; tap again to bring it back. <b>Double-click a name to solo</b> it — hear exactly what that layer contributes.</li>
+        <li><b>Stack a second generator</b> underneath the first, and <b>calibrate the EQ</b> once for your speakers and ears — both live below the mixer.</li>
       </ol>
     </div>
     <div class="card">
@@ -280,6 +349,32 @@ footer p{margin:0 0 6px}
         <li>Low, steady mixes (Distant Rain, Deep Swell, Brown noise) mask household noise without demanding attention.</li>
         <li>Set the <b>sleep timer</b> and let the fade-out carry you off — no sudden silence to wake you.</li>
         <li>Keep master volume modest and let the low faders do the masking; very bright channels (Spray, Sparks, high bands) are best kept low at night.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Stacks worth trying</h3>
+      <ul>
+        <li><b>Rainy Day Café + Rain on Leaves</b> underneath at ~40% — the café sits indoors, the weather stays outside.</li>
+        <li><b>Blizzard Cabin + Crackling Fire</b> — the stove channels double up and the storm stays at the walls.</li>
+        <li><b>Summer Night + Thunderstorm</b> at low level — crickets in front, a storm working miles behind them.</li>
+        <li><b>Train Journey + Pure Noise</b> (Brown preset) — rail rhythm over a deep masking bed for noisy rooms.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Animate, three ways</h3>
+      <ul>
+        <li><b>Drift</b> — every fader random-walks on its own clock; the classic myNoise slider animation.</li>
+        <li><b>Wave</b> — the faders rise and fall in sequence, left to right, like weather moving through the scene.</li>
+        <li><b>Breathe</b> — the whole mix swells and settles together around your settings, on a slow cycle.</li>
+        <li>Wave and Breathe move <b>around</b> the mix you set — your balance stays the center of the motion.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Tones &amp; the bell</h3>
+      <ul>
+        <li><b>Drone &amp; Tones</b> tunes a harmonic stack like an instrument; its binaural pair (200 Hz left, 210 Hz right) produces a slow 10 Hz beat in headphones.</li>
+        <li>The <b>meditation bell</b> rings once when you turn it on, then every five minutes over whatever is playing.</li>
+        <li>Combine the bell with the <b>sleep timer</b>: bells mark the time while you're awake, and the fade-out still ends the session.</li>
       </ul>
     </div>
   </div>
@@ -311,7 +406,7 @@ var SCENES = [
 {
   id:"rain", name:"Rain on Leaves", short:"Rain", img:"assets/rain.jpg",
   alt:"Rain streaking a window in front of green foliage",
-  accent:"#2e6f6a", tag:"Rain · Weather",
+  accent:"#2e6f6a", tag:"Rain · Weather", cat:"weather",
   desc:"Steady rain through a tree canopy — broad washes of falling water underneath, individual droplets and puddle splashes on top, and thunder kept far away.",
   channels:[
     C("Distant Rain","wash","low",420,{noise:"p",scale:.9}),
@@ -336,7 +431,7 @@ var SCENES = [
 {
   id:"ocean", name:"Ocean Waves", short:"Ocean", img:"assets/ocean.jpg",
   alt:"Ocean waves breaking on a sandy beach",
-  accent:"#1f6f8b", tag:"Ocean · Water",
+  accent:"#1f6f8b", tag:"Ocean · Water", cat:"water",
   desc:"Surf in layers: a deep swell underneath everything, breakers rolling in on a slow cycle, and foam, pebbles and spray fizzing at the shoreline.",
   channels:[
     C("Deep Swell","the undertow","swell",300,{noise:"b",scale:1,rate:.055}),
@@ -361,7 +456,7 @@ var SCENES = [
 {
   id:"forest", name:"Forest & Birds", short:"Forest", img:"assets/forest.jpg",
   alt:"Mist drifting between tall pine trees",
-  accent:"#4a7c3a", tag:"Forest · Daytime",
+  accent:"#4a7c3a", tag:"Forest · Daytime", cat:"nature",
   desc:"A living woodland: wind moving through pines at several heights, a stream somewhere below, and birdsong that comes and goes the way it does on a real walk.",
   channels:[
     C("Pine Wind","high canopy","wind",900,{noise:"p",scale:.7}),
@@ -386,7 +481,7 @@ var SCENES = [
 {
   id:"fire", name:"Crackling Fire", short:"Fireplace", img:"assets/fire.jpg",
   alt:"Logs burning with bright flames in a fireplace",
-  accent:"#b4552d", tag:"Fire · Indoors",
+  accent:"#b4552d", tag:"Fire · Indoors", cat:"indoors",
   desc:"A wood fire up close: the low roar of the flames as a bed, then the detail — crackles, pops, shifting embers and the occasional spark — arriving at random, like a real hearth.",
   channels:[
     C("Fire Roar","the bed","low",300,{noise:"p",scale:.9,lf:.11}),
@@ -411,7 +506,7 @@ var SCENES = [
 {
   id:"river", name:"Mountain Stream", short:"Stream", img:"assets/river.jpg",
   alt:"A mountain stream running fast over rocks",
-  accent:"#2b7a78", tag:"River · Water",
+  accent:"#2b7a78", tag:"River · Water", cat:"water",
   desc:"Cold water over stone. Rapids and riffles in the middle bands, bubbles and eddies at the edges, and a small waterfall somewhere upstream.",
   channels:[
     C("Main Current","the flow","band",800,{q:.6,noise:"p",scale:.9,lf:.06}),
@@ -436,7 +531,7 @@ var SCENES = [
 {
   id:"night", name:"Summer Night", short:"Night", img:"assets/night.jpg",
   alt:"The Milky Way over a dark mountain silhouette",
-  accent:"#3d5a80", tag:"Night · Insects",
+  accent:"#3d5a80", tag:"Night · Insects", cat:"nature",
   desc:"A warm night outside: several kinds of crickets keeping different rhythms, frogs down by the water, an owl now and then, and almost no wind at all.",
   channels:[
     C("Crickets","steady chorus","cricket",0,{scale:.9}),
@@ -461,7 +556,7 @@ var SCENES = [
 {
   id:"storm", name:"Thunderstorm", short:"Storm", img:"assets/storm.jpg",
   alt:"Lightning striking through dark storm clouds",
-  accent:"#5b5ea6", tag:"Storm · Weather",
+  accent:"#5b5ea6", tag:"Storm · Weather", cat:"weather",
   desc:"A storm with the volume kept honest: rain and wind as the body of it, thunder as the event — near cracks, rolling peals, and long low rumbles that fade for miles.",
   channels:[
     C("Storm Rain","on everything","band",1000,{q:.55,noise:"w",scale:.85}),
@@ -486,7 +581,7 @@ var SCENES = [
 {
   id:"noise", name:"Pure Noise", short:"Pure Noise", img:"", thumb:"32—16k",
   alt:"",
-  accent:"#6b6f76", tag:"Noise · Spectrum",
+  accent:"#6b6f76", tag:"Noise · Spectrum", cat:"tones",
   desc:"The original spectrum mixer: ten bands of noise, one per fader, from a 32 Hz rumble to a 16 kHz hiss. Shape it into white, pink or brown noise — or carve out exactly the band that masks what's bothering you.",
   channels:[
     C("32 Hz","sub rumble","band",32,{q:1.1,noise:"w",scale:1}),
@@ -506,6 +601,131 @@ var SCENES = [
     {name:"White Noise", v:[.55,.55,.55,.55,.55,.55,.55,.55,.55,.55]},
     {name:"Deep Focus", v:[.9,.95,.8,.6,.4,.25,.15,.08,.04,.02]},
     {name:"Bright Air", v:[.25,.3,.38,.48,.6,.72,.82,.9,.95,1]}
+  ]
+},
+{
+  id:"garden", name:"Japanese Garden", short:"Garden", img:"assets/garden.jpg",
+  alt:"A bamboo fountain pouring into a stone basin in a mossy Japanese garden",
+  accent:"#5d8a4a", tag:"Garden · Water", cat:"nature",
+  desc:"A quiet garden built around water: a bamboo fountain that fills, tips and knocks on its slow cycle, a stream below the stones, wind chimes in the maple, and frogs toward evening.",
+  channels:[
+    C("Stream","below the stones","band",1100,{q:.7,noise:"w",scale:.55,lf:.12}),
+    C("Bamboo Fountain","fills & knocks","shishi",0,{scale:.95}),
+    C("Basin Drips","into the tsukubai","drop",0,{scale:.6}),
+    C("Wind Chimes","furin bells","chime",0,{scale:.8}),
+    C("Maple Wind","in the trees","wind",1300,{noise:"w",scale:.5}),
+    C("Birdsong","garden birds","bird",0,{scale:.7}),
+    C("Frogs","evening pond","frog",0,{scale:.55}),
+    C("Cicadas","summer hum","cricket",0,{scale:.4,high:true}),
+    C("Temple Bell","far away","drop",0,{scale:.55,bell:true}),
+    C("Garden Air","stillness","low",200,{noise:"p",scale:.45})
+  ],
+  presets:[
+    {name:"Morning Garden", v:[.6,.7,.55,.5,.4,.7,.2,.3,.3,.45]},
+    {name:"By the Fountain", v:[.5,1,.8,.35,.3,.4,.3,.2,.45,.4]},
+    {name:"Evening Frogs", v:[.55,.6,.5,.3,.35,.3,1,.45,.4,.55]},
+    {name:"Chime Breeze", v:[.45,.5,.4,1,.75,.5,.25,.35,.3,.5]},
+    {name:"Deep Quiet", v:[.4,.45,.6,.2,.25,.25,.4,.15,.5,.7]}
+  ]
+},
+{
+  id:"train", name:"Train Journey", short:"Train", img:"assets/train.jpg",
+  alt:"Railway tracks and green countryside seen from a train window",
+  accent:"#7a5c3e", tag:"Train · Travel", cat:"travel",
+  desc:"The rhythm of the rails: a steady clickety-clack under a low carriage rumble, wind rushing past the window, muffled voices down the car, and a horn somewhere up the line.",
+  channels:[
+    C("Track Rhythm","clickety-clack","clack",0,{scale:1}),
+    C("Rail Hum","steel singing","low",300,{noise:"p",scale:.55,lf:.08}),
+    C("Carriage Rumble","the floor of it","low",95,{noise:"b",scale:.95}),
+    C("Wind Rush","past the window","wind",900,{noise:"p",scale:.6}),
+    C("Window Rain","on the glass","high",4200,{noise:"w",scale:.35}),
+    C("Cabin Murmur","other passengers","murmur",0,{scale:.6}),
+    C("Points & Joints","heavier clacks","clack",0,{scale:.7,slow:true}),
+    C("Distant Horn","level crossings","horn",0,{scale:.8}),
+    C("Brake Squeal","into stations","chime",0,{scale:.3,brake:true}),
+    C("Engine Drone","up front","drone",58,{wave:"sawtooth",scale:.32})
+  ],
+  presets:[
+    {name:"Night Sleeper", v:[.8,.5,.85,.4,.15,.35,.5,.3,.1,.6]},
+    {name:"Day Express", v:[1,.65,.7,.7,.3,.55,.7,.5,.3,.5]},
+    {name:"Rainy Window", v:[.75,.5,.8,.55,1,.4,.45,.35,.15,.45]},
+    {name:"Slow Local", v:[.6,.45,.6,.35,.2,.5,.85,.45,.5,.4]},
+    {name:"Rumble Only", v:[.3,.6,1,.25,0,.2,.2,.1,0,.8]}
+  ]
+},
+{
+  id:"cafe", name:"Rainy Day Café", short:"Café", img:"assets/cafe.jpg",
+  alt:"Painted illustration of a cozy café interior with an espresso machine and rain on the window",
+  accent:"#9a6a44", tag:"Café · Indoors", cat:"indoors",
+  desc:"Somewhere warm to sit out the rain: low conversation that never quite resolves into words, cups and cutlery, the espresso machine cycling, and weather against the glass.",
+  channels:[
+    C("Room Murmur","the crowd bed","low",480,{noise:"p",scale:.6,lf:.06}),
+    C("Conversation","nearby tables","murmur",0,{scale:.85}),
+    C("Cups & Saucers","clinks","crackle",0,{scale:.55,bright:true,sparse:true}),
+    C("Espresso","steam & pumps","steam",0,{scale:.8}),
+    C("Rain on Window","outside","high",4000,{noise:"w",scale:.45}),
+    C("Cutlery","drawers & plates","crackle",0,{scale:.4,sparse:true}),
+    C("Chairs & Steps","the room moving","murmur",0,{scale:.4,low:true}),
+    C("Door Bell","arrivals","chime",0,{scale:.5,door:true}),
+    C("Radiator","warm pipes","low",140,{noise:"b",scale:.5,lf:.03}),
+    C("Street","muffled traffic","low",220,{noise:"p",scale:.4,lf:.045})
+  ],
+  presets:[
+    {name:"Busy Morning", v:[.7,1,.7,.8,.35,.6,.6,.5,.3,.45]},
+    {name:"Quiet Corner", v:[.55,.45,.5,.4,.6,.35,.3,.3,.55,.4]},
+    {name:"Rainy Window Seat", v:[.5,.55,.45,.5,1,.4,.35,.4,.5,.55]},
+    {name:"Closing Time", v:[.4,.3,.55,.35,.5,.5,.45,.2,.6,.35]},
+    {name:"Work Session", v:[.65,.6,.4,.45,.4,.3,.4,.25,.45,.5]}
+  ]
+},
+{
+  id:"blizzard", name:"Blizzard Cabin", short:"Blizzard", img:"assets/blizzard.jpg",
+  alt:"A snow-covered cabin with a warmly lit window during heavy snowfall",
+  accent:"#4a6b8a", tag:"Winter · Indoors", cat:"indoors",
+  desc:"A storm doing its worst outside a thick-walled cabin: wind worrying at the eaves, snow hissing against the glass, timber creaking — and a wood stove ticking with heat inside.",
+  channels:[
+    C("Storm Wind","around the eaves","wind",340,{noise:"p",scale:.9}),
+    C("Gusts","slamming waves","swell",520,{noise:"p",scale:.8,rate:.05}),
+    C("Snow Hiss","against the glass","high",5600,{noise:"w",scale:.4,lf:.15}),
+    C("Howl","down the chimney","wind",180,{noise:"b",scale:.6}),
+    C("Stove Fire","inside","crackle",0,{scale:.7}),
+    C("Fire Bed","low flames","low",260,{noise:"p",scale:.55,lf:.09}),
+    C("Kettle","coming to boil","steam",0,{scale:.45,kettle:true}),
+    C("Creaks","timber & roof","thunder",0,{scale:.4,soft:true}),
+    C("Drips","meltwater inside","drop",0,{scale:.35}),
+    C("Deep Cold","the low night","low",80,{noise:"b",scale:.8})
+  ],
+  presets:[
+    {name:"Full Blizzard", v:[1,.9,.6,.7,.4,.4,.3,.5,.2,.8]},
+    {name:"By the Stove", v:[.6,.5,.35,.4,1,.8,.6,.35,.4,.6]},
+    {name:"Sleeping Loft", v:[.7,.55,.4,.5,.35,.45,.2,.3,.3,.9]},
+    {name:"Wind Only", v:[1,.95,.7,.85,0,.1,0,.4,.1,.7]},
+    {name:"Storm Passing", v:[.55,.4,.3,.35,.55,.6,.5,.3,.45,.55]}
+  ]
+},
+{
+  id:"tones", name:"Drone & Tones", short:"Tones", img:"", thumb:"≈ Hz",
+  alt:"",
+  accent:"#7a6a9a", tag:"Tones · Drones", cat:"tones",
+  desc:"Sustained tones instead of weather: a low harmonic stack you tune like an instrument, plus a binaural pair — two close sine waves, one per ear, beating slowly against each other. Headphones for the binaural channels.",
+  channels:[
+    C("Root","55 Hz","drone",55,{wave:"sine",scale:.95}),
+    C("Fifth","82.5 Hz","drone",82.5,{wave:"sine",scale:.8}),
+    C("Octave","110 Hz","drone",110,{wave:"sine",scale:.75}),
+    C("Warmth","165 Hz saw","drone",165,{wave:"sawtooth",scale:.3}),
+    C("Air","220 Hz","drone",220,{wave:"triangle",scale:.5}),
+    C("Binaural L","200 Hz · left ear","drone",200,{wave:"sine",scale:.55,pan:-1}),
+    C("Binaural R","210 Hz · right ear","drone",210,{wave:"sine",scale:.55,pan:1}),
+    C("Shimmer","330 Hz","drone",330,{wave:"triangle",scale:.35}),
+    C("High Ring","440 Hz","drone",440,{wave:"sine",scale:.28}),
+    C("Noise Bed","soft air","low",900,{noise:"p",scale:.3,lf:.05})
+  ],
+  presets:[
+    {name:"Deep Drone", v:[1,.85,.7,.4,.3,0,0,.2,.1,.35]},
+    {name:"Binaural Calm", v:[.3,.2,.25,0,.15,1,1,.1,.05,.3]},
+    {name:"Warm Chord", v:[.8,.75,.8,.55,.6,.2,.2,.45,.3,.25]},
+    {name:"Bright Ring", v:[.35,.3,.4,.25,.6,.3,.3,.8,1,.2]},
+    {name:"Near Silence", v:[.5,.3,.2,.1,.1,.35,.35,.05,0,.45]}
   ]
 }
 ];
@@ -536,7 +756,7 @@ function toast(msg){
 }
 
 /* ================= Audio engine ================= */
-var ctx = null, master = null, analyser = null, buffers = {}, nodes = [], builtFor = null;
+var ctx = null, master = null, analyser = null, buffers = {}, nodes = [], builtFor = null, eqNodes = [], bellBus = null, bellNode = null;
 var masterVol = 0.8;
 
 function makeBuffers(){
@@ -689,12 +909,85 @@ var EVENT_BUILDERS = {
       for (var i=0;i<n;i++)
         tone(node.gain, { type:"sawtooth", f0: 1250, f1: 640, d: 0.42, vol: 0.07, delay: i*0.6, lp: 2600, a: 0.04 });
     }, 9, 22);
+  },
+  chime: function(node, ch){
+    if (ch.brake){
+      schedule(node, function(){
+        tone(node.gain, { f0: 2400+Math.random()*600, f1: 1500, d: 0.7, vol: 0.10, a: 0.08 });
+      }, 14, 30);
+      return;
+    }
+    if (ch.door){
+      schedule(node, function(){
+        tone(node.gain, { f0: 1568, d: 0.5, vol: 0.16, a: 0.004 });
+        tone(node.gain, { f0: 2093, d: 0.6, vol: 0.12, delay: 0.09, a: 0.004 });
+      }, 8, 20);
+      return;
+    }
+    schedule(node, function(){
+      var notes = [5233, 5873, 6593, 7840, 8800];
+      var n = 1 + Math.floor(Math.random()*3);
+      for (var i=0;i<n;i++)
+        tone(node.gain, { f0: notes[Math.floor(Math.random()*notes.length)], d: 1.6+Math.random(), vol: 0.05+Math.random()*0.05, delay: i*(0.12+Math.random()*0.3), a: 0.004 });
+    }, 1.2, 4);
+  },
+  shishi: function(node, ch){
+    schedule(node, function(){
+      var fill = 1.6 + Math.random()*1.4;
+      burst(node.gain, { freq: 1900, q: 1.2, vol: 0.20, a: 0.15, d: fill, rate: 0.9 });
+      tone(node.gain, { f0: 300, f1: 130, d: 0.14, vol: 0.5, delay: fill + 0.15, a: 0.004 });
+      burst(node.gain, { freq: 900, q: 2, vol: 0.3, d: 0.1, delay: fill + 0.15, rate: 1.2 });
+    }, 3.5, 6.5);
+  },
+  clack: function(node, ch){
+    schedule(node, function(){
+      var gap = ch.slow ? 0.62 : 0.42;
+      var hits = ch.slow ? [0, gap] : [0, 0.16, gap, gap+0.16];
+      hits.forEach(function(dl){
+        burst(node.gain, { freq: ch.slow ? 500 : 700, q: 1.6, vol: 0.5, d: 0.06, delay: dl, rate: 0.8 });
+        burst(node.gain, { freq: 240, q: 1, vol: 0.4, d: 0.09, delay: dl, rate: 0.7 });
+      });
+    }, ch.slow ? 1.5 : 0.95, ch.slow ? 2.6 : 1.7);
+  },
+  murmur: function(node, ch){
+    schedule(node, function(){
+      var n = 2 + Math.floor(Math.random()*3), dl = 0;
+      for (var i=0;i<n;i++){
+        var d = 0.25 + Math.random()*0.5;
+        burst(node.gain, { noise:"p", ft:"bandpass", freq: ch.low ? 240+Math.random()*120 : 500+Math.random()*500, q: 2.5, vol: ch.low ? 0.25 : 0.20, a: 0.09, d: d, delay: dl, rate: 0.75 });
+        dl += d + 0.08 + Math.random()*0.25;
+      }
+    }, 0.7, 2.2);
+  },
+  steam: function(node, ch){
+    schedule(node, function(){
+      burst(node.gain, { ft:"highpass", freq: 3800, vol: ch.kettle ? 0.16 : 0.3, a: 0.4, d: 1.2+Math.random()*1.4, rate: 1.1 });
+      if (!ch.kettle && Math.random() < 0.6)
+        burst(node.gain, { freq: 300, q: 1.2, vol: 0.35, a: 0.05, d: 0.4, delay: 1.6, rate: 0.8 });
+    }, ch.kettle ? 9 : 6, ch.kettle ? 18 : 14);
+  },
+  horn: function(node, ch){
+    schedule(node, function(){
+      tone(node.gain, { type:"triangle", f0: 311, d: 1.1, vol: 0.22, a: 0.12, lp: 900 });
+      tone(node.gain, { type:"triangle", f0: 370, d: 1.1, vol: 0.18, a: 0.12, lp: 900 });
+      if (Math.random() < 0.5){
+        tone(node.gain, { type:"triangle", f0: 311, d: 0.8, vol: 0.2, delay: 1.7, a: 0.12, lp: 900 });
+        tone(node.gain, { type:"triangle", f0: 370, d: 0.8, vol: 0.16, delay: 1.7, a: 0.12, lp: 900 });
+      }
+    }, 16, 34);
+  },
+  bellTimer: function(node, ch){
+    schedule(node, function(){
+      tone(node.gain, { f0: 1318, d: 2.8, vol: 0.30, a: 0.004 });
+      tone(node.gain, { f0: 2637, d: 1.6, vol: 0.08, a: 0.004 });
+    }, ch.every || 300, ch.every || 300);
   }
 };
-function buildChannel(ch, i){
+function buildChannel(ch, i, ctxVals, ctxMutes, dest){
+  var cv = ctxVals || vals(), cm = ctxMutes || mutes();
   var node = { gain: ctx.createGain(), dead:false, timer:null, srcs:[], oscs:[] };
-  node.gain.gain.value = gainFor(ch, vals()[i], mutes()[i]);
-  node.gain.connect(master);
+  node.gain.gain.value = gainFor(ch, cv[i], cm[i]);
+  node.gain.connect(dest || master);
   var kind = ch.kind;
   if (kind === "band" || kind === "low" || kind === "high" || kind === "wind" || kind === "swell"){
     var src = noiseSrc(ch.noise);
@@ -726,7 +1019,11 @@ function buildChannel(ch, i){
     src.start(); node.srcs.push(src);
   } else if (kind === "drone"){
     var o = ctx.createOscillator(); o.type = ch.wave || "sine"; o.frequency.value = ch.freq;
-    o.connect(node.gain); o.start(); node.oscs.push(o);
+    if (ch.pan && ctx.createStereoPanner){
+      var pn = ctx.createStereoPanner(); pn.pan.value = ch.pan;
+      o.connect(pn); pn.connect(node.gain);
+    } else o.connect(node.gain);
+    o.start(); node.oscs.push(o);
   } else if (EVENT_BUILDERS[kind]){
     EVENT_BUILDERS[kind](node, ch);
   }
@@ -746,6 +1043,117 @@ function teardownGraph(){
   });
   nodes = []; builtFor = null;
 }
+
+/* ================= Layer: a second generator underneath ================= */
+var layerNodes = [], layerFor = null, layerBus = null, layerVol = 0.55, layerOn = false;
+function layerIdx(){ var v = parseInt($("layerSel").value, 10); return isNaN(v) ? -1 : v; }
+function buildLayer(){
+  teardownLayer();
+  if (!layerOn || !ctx) return;
+  var li = layerIdx();
+  if (li < 0 || li === state.idx) return;
+  var ls = SCENES[li];
+  layerBus = ctx.createGain();
+  layerBus.gain.value = Math.pow(layerVol, 1.5);
+  layerBus.connect(master);
+  layerNodes = ls.channels.map(function(ch, i){
+    return buildChannel(ch, i, state.values[ls.id], state.muted[ls.id], layerBus);
+  });
+  layerFor = ls.id;
+}
+function teardownLayer(){
+  layerNodes.forEach(function(n){
+    n.dead = true; clearTimeout(n.timer);
+    n.srcs.forEach(function(s){ try{ s.stop(); }catch(e){} });
+    n.oscs.forEach(function(o){ try{ o.stop(); }catch(e){} });
+    try{ n.gain.disconnect(); }catch(e){}
+  });
+  layerNodes = [];
+  if (layerBus){ try{ layerBus.disconnect(); }catch(e){} layerBus = null; }
+  layerFor = null;
+}
+function refreshLayerUI(){
+  var sel = $("layerSel"); if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = "";
+  SCENES.forEach(function(s, i){
+    if (i === state.idx) return;
+    var o = document.createElement("option");
+    o.value = i; o.textContent = s.name;
+    sel.appendChild(o);
+  });
+  if (cur !== "" && parseInt(cur, 10) !== state.idx) sel.value = cur;
+  $("layerBtn").textContent = layerOn ? "Remove layer" : "Add layer";
+  $("layerBtn").setAttribute("aria-pressed", layerOn ? "true" : "false");
+}
+
+/* ================= Calibration EQ ================= */
+var EQ_BANDS = [
+  { name:"Bass", freq:120, type:"lowshelf" },
+  { name:"Warmth", freq:320, type:"peaking" },
+  { name:"Body", freq:800, type:"peaking" },
+  { name:"Presence", freq:2400, type:"peaking" },
+  { name:"Brilliance", freq:6000, type:"peaking" },
+  { name:"Air", freq:11000, type:"highshelf" }
+];
+var eqVals = [0,0,0,0,0,0];
+var EQ_PRESETS = [
+  { name:"Flat", v:[0,0,0,0,0,0] },
+  { name:"Small speakers", v:[5,3,0,-1,2,3] },
+  { name:"Gentle highs lift", v:[0,0,0,2,4,5] },
+  { name:"Warm & dark", v:[3,3,1,-2,-4,-5] },
+  { name:"Tinnitus notch · 6 kHz", v:[0,0,0,0,-9,-4] }
+];
+function buildEQ(){
+  var wrap = $("eqBands"); if (!wrap) return;
+  wrap.innerHTML = "";
+  EQ_BANDS.forEach(function(b, bi){
+    var row = document.createElement("div"); row.className = "eqband";
+    row.innerHTML = '<label for="eq' + bi + '">' + b.name + '<small>' + (b.freq >= 1000 ? (b.freq/1000) + " kHz" : b.freq + " Hz") + '</small></label>' +
+      '<input type="range" id="eq' + bi + '" min="-12" max="12" step="1" value="' + eqVals[bi] + '" aria-label="' + b.name + ' EQ gain">' +
+      '<output>' + (eqVals[bi] > 0 ? "+" : "") + eqVals[bi] + ' dB</output>';
+    wrap.appendChild(row);
+    row.querySelector("input").addEventListener("input", function(){
+      eqVals[bi] = parseFloat(this.value);
+      row.querySelector("output").textContent = (eqVals[bi] > 0 ? "+" : "") + eqVals[bi] + " dB";
+      if (eqNodes[bi] && ctx) eqNodes[bi].gain.setTargetAtTime(eqVals[bi], ctx.currentTime, 0.05);
+      document.querySelectorAll("#eqPresets .chip").forEach(function(c){ c.classList.remove("active"); });
+    });
+  });
+  var pw = $("eqPresets"); pw.innerHTML = "";
+  EQ_PRESETS.forEach(function(p){
+    var b2 = document.createElement("button");
+    b2.className = "chip light"; b2.textContent = p.name;
+    b2.addEventListener("click", function(){
+      eqVals = p.v.slice();
+      if (ctx) eqNodes.forEach(function(f, fi){ if (f) f.gain.setTargetAtTime(eqVals[fi], ctx.currentTime, 0.1); });
+      buildEQ();
+      toast("Calibration: " + p.name);
+    });
+    pw.appendChild(b2);
+  });
+}
+
+/* ================= Meditation bell ================= */
+var bellOn = false;
+function setBell(on){
+  bellOn = on;
+  $("bellBtn").setAttribute("aria-pressed", on ? "true" : "false");
+  if (on){
+    ensureCtx();
+    if (!state.playing) play();
+    bellBus.gain.setTargetAtTime(0.9, ctx.currentTime, 0.3);
+    setTimeout(function(){
+      if (!bellOn || !bellBus) return;
+      tone(bellBus, { f0: 1318, d: 2.8, vol: 0.30, a: 0.004 });
+      tone(bellBus, { f0: 2637, d: 1.6, vol: 0.08, a: 0.004 });
+    }, 450);
+    toast("Meditation bell on — a soft chime every 5 minutes");
+  } else if (bellBus && ctx){
+    bellBus.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
+    toast("Meditation bell off");
+  }
+}
 function ensureCtx(){
   if (ctx) return;
   var AC = window.AudioContext || window.webkitAudioContext;
@@ -755,7 +1163,19 @@ function ensureCtx(){
   compNode.threshold.value = -18; compNode.ratio.value = 4;
   analyser = ctx.createAnalyser(); analyser.fftSize = 256; analyser.smoothingTimeConstant = 0.82;
   master = ctx.createGain(); master.gain.value = 0;
-  master.connect(analyser); analyser.connect(compNode); compNode.connect(ctx.destination);
+  eqNodes = EQ_BANDS.map(function(b, bi){
+    var f = ctx.createBiquadFilter();
+    f.type = b.type; f.frequency.value = b.freq; f.Q.value = 0.9;
+    f.gain.value = eqVals[bi];
+    return f;
+  });
+  master.connect(eqNodes[0]);
+  for (var ei=0; ei<eqNodes.length-1; ei++) eqNodes[ei].connect(eqNodes[ei+1]);
+  eqNodes[eqNodes.length-1].connect(analyser);
+  analyser.connect(compNode); compNode.connect(ctx.destination);
+  bellBus = ctx.createGain(); bellBus.gain.value = 0; bellBus.connect(master);
+  bellNode = { gain: bellBus, dead:false, timer:null, srcs:[], oscs:[] };
+  EVENT_BUILDERS.bellTimer(bellNode, { every: 300 });
 }
 function setMaster(v, t){
   if (!ctx) return;
@@ -764,6 +1184,7 @@ function setMaster(v, t){
 function play(){
   ensureCtx();
   if (builtFor !== scene().id) buildGraph();
+  if (layerOn && !layerNodes.length) buildLayer();
   ctx.resume();
   state.playing = true;
   setMaster(Math.pow(masterVol, 1.5) * 0.9, 0.7);
@@ -817,10 +1238,18 @@ function buildFaders(){
       track.addEventListener("pointermove", mv); track.addEventListener("pointerup", up);
     });
     track.addEventListener("dblclick", function(){ setValue(i, 0, true); });
-    d.querySelector(".fname").addEventListener("click", function(){
+    var fnameBtn = d.querySelector(".fname");
+    fnameBtn.addEventListener("click", function(){
       mutes()[i] = !mutes()[i];
       if (ctx && builtFor === scene().id) applyGain(i);
       refreshFader(i); updateActiveReadout();
+    });
+    fnameBtn.addEventListener("dblclick", function(){
+      var isSoloed = mutes().every(function(m, j){ return j === i || m; });
+      mutes().forEach(function(_, j){ mutes()[j] = !isSoloed && j !== i; });
+      for (var j=0;j<10;j++){ if (ctx && builtFor === scene().id) applyGain(j); refreshFader(j); }
+      updateActiveReadout();
+      toast(isSoloed ? "Solo off — all channels back" : "Solo: " + ch.name);
     });
     d.addEventListener("keydown", function(e){
       var step = e.shiftKey ? 0.15 : 0.05, handled = true;
@@ -907,18 +1336,34 @@ function applyPreset(p){
 }
 
 /* ================= Animate (drifting faders) ================= */
-var animTargets = null, animNext = null, animRAF = null, lastAnimT = 0;
+var animTargets = null, animNext = null, animRAF = null, lastAnimT = 0, animBase = null, animT0 = 0;
 function startAnimate(){
   if (state.animate) return;
   state.animate = true;
   $("animateBtn").setAttribute("aria-pressed", "true");
   $("speedBox").hidden = false;
   animTargets = vals().slice();
+  animBase = vals().slice(); animT0 = performance.now();
   animNext = animTargets.map(function(){ return performance.now() + 1500 + Math.random()*5000; });
   lastAnimT = performance.now();
   function loop(now){
     if (!state.animate) return;
     var dt = Math.min(100, now - lastAnimT); lastAnimT = now;
+    var mode = $("animMode").value;
+    if (mode !== "drift"){
+      var sp2 = parseFloat($("animSpeed").value);
+      var ph = (now - animT0) / 1000 * sp2 * 0.22;
+      for (var wi=0; wi<10; wi++){
+        var off = mode === "wave" ? wi * 0.7 : 0;
+        var tgt = Math.max(0.02, Math.min(1, animBase[wi] + Math.sin(ph + off) * 0.28));
+        vals()[wi] += (tgt - vals()[wi]) * Math.min(1, dt/90);
+        if (ctx && builtFor === scene().id) applyGain(wi);
+        refreshFader(wi);
+      }
+      updateActiveReadout();
+      animRAF = requestAnimationFrame(loop);
+      return;
+    }
     var speed = parseFloat($("animSpeed").value); /* 1..10 */
     var rate = dt * speed / 24000; /* slow drift: time constant ~24s at speed 1, ~2.4s at 10 */
     for (var i=0;i<10;i++){
@@ -956,6 +1401,7 @@ function buildPicker(){
   SCENES.forEach(function(s, i){
     var b = document.createElement("button");
     b.className = "pick"; b.type = "button";
+    b.dataset.cat = s.cat || "nature";
     b.setAttribute("aria-pressed", i === state.idx ? "true" : "false");
     b.setAttribute("aria-label", "Open " + s.name);
     b.innerHTML = '<span class="onair">Selected</span>' +
@@ -982,6 +1428,11 @@ function selectScene(i){
     p.setAttribute("aria-pressed", j === i ? "true" : "false");
   });
   buildPresets(); buildFaders(); updatePlayUI();
+  if (layerOn && layerFor === s.id){
+    layerOn = false; teardownLayer();
+    $("layerMsg").textContent = "Layer removed — " + s.name + " is now the main scene.";
+  }
+  refreshLayerUI();
   if (ctx && wasPlaying){ buildGraph(); }
   else if (ctx){ teardownGraph(); }
 }
@@ -1069,6 +1520,88 @@ $("muteAllBtn").addEventListener("click", function(){
   stopAnimate(); markCustom(); tweenValues([0,0,0,0,0,0,0,0,0,0], 500); toast("All channels silent");
 });
 $("animateBtn").addEventListener("click", function(){ state.animate ? stopAnimate() : startAnimate(); });
+$("animMode").addEventListener("change", function(){ animBase = vals().slice(); animT0 = performance.now(); });
+$("bellBtn").addEventListener("click", function(){ setBell(!bellOn); });
+$("layerBtn").addEventListener("click", function(){
+  if (layerOn){
+    layerOn = false; teardownLayer();
+    $("layerMsg").textContent = "Layer removed.";
+    refreshLayerUI();
+    return;
+  }
+  var li = layerIdx();
+  if (li < 0 || li === state.idx){ toast("Pick another scene to layer"); return; }
+  layerOn = true;
+  ensureCtx();
+  buildLayer();
+  if (!state.playing) play();
+  $("layerMsg").textContent = "Layering " + SCENES[li].name + " underneath, playing its own saved mix at the level set here.";
+  toast("Layer added: " + SCENES[li].name);
+  refreshLayerUI();
+});
+$("layerSel").addEventListener("change", function(){
+  if (!layerOn) return;
+  buildLayer();
+  $("layerMsg").textContent = "Layering " + SCENES[layerIdx()].name + " underneath, playing its own saved mix at the level set here.";
+});
+$("layerVol").addEventListener("input", function(){
+  layerVol = parseFloat(this.value)/100;
+  $("layerOut").textContent = this.value + "%";
+  if (layerBus && ctx) layerBus.gain.setTargetAtTime(Math.pow(layerVol,1.5), ctx.currentTime, 0.15);
+});
+var currentFilter = "all";
+function applyFilter(){
+  document.querySelectorAll("#picker .pick").forEach(function(p, j){
+    p.classList.toggle("hide", currentFilter !== "all" && SCENES[j].cat !== currentFilter);
+  });
+}
+document.querySelectorAll(".fchip").forEach(function(c){
+  if (!c.dataset.f) return;
+  c.addEventListener("click", function(){
+    currentFilter = c.dataset.f;
+    document.querySelectorAll(".fchip").forEach(function(x){ if (x.dataset.f) x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+    applyFilter();
+  });
+});
+$("surpriseBtn").addEventListener("click", function(){
+  var i = Math.floor(Math.random()*SCENES.length);
+  if (i === state.idx) i = (i+1) % SCENES.length;
+  selectScene(i);
+  var ps = SCENES[i].presets;
+  applyPreset(ps[Math.floor(Math.random()*ps.length)]);
+  if (!state.playing) play();
+  document.querySelector(".console").scrollIntoView({ behavior:"smooth", block:"start" });
+});
+$("loadMixBtn").addEventListener("click", function(){
+  var text = $("mixCodeIn").value.trim();
+  if (!text){ toast("Paste a copied mix first"); return; }
+  var lines = text.split(/\n/);
+  var title = lines[0].replace(/ — my ambient mix.*$/, "").trim();
+  var ti = -1;
+  SCENES.forEach(function(s, i){ if (s.name === title) ti = i; });
+  if (ti < 0){ $("mixMsg").textContent = "Couldn't find that soundscape name in the pasted text — paste the full copied mix."; return; }
+  if (ti !== state.idx) selectScene(ti);
+  var target = vals().slice(), newMutes = mutes().slice(), found = 0;
+  lines.slice(1).forEach(function(line){
+    var m = line.match(/^(.+?):\s*(muted|(\d+)%)\s*$/);
+    if (!m) return;
+    scene().channels.forEach(function(ch, ci){
+      if (ch.name === m[1].trim()){
+        found++;
+        if (m[2] === "muted"){ newMutes[ci] = true; }
+        else { newMutes[ci] = false; target[ci] = parseInt(m[3], 10)/100; }
+      }
+    });
+  });
+  if (!found){ $("mixMsg").textContent = "No channel lines matched — paste the full copied text."; return; }
+  stopAnimate();
+  newMutes.forEach(function(mv, ci){ mutes()[ci] = mv; });
+  markCustom();
+  tweenValues(target, 700);
+  for (var ci2=0; ci2<10; ci2++) refreshFader(ci2);
+  $("mixMsg").textContent = "Loaded a pasted mix for " + scene().name + ".";
+  toast("Mix loaded — " + scene().name);
+});
 $("masterVol").addEventListener("input", function(){
   masterVol = parseFloat(this.value) / 100;
   $("masterOut").textContent = this.value + "%";
@@ -1112,6 +1645,7 @@ document.addEventListener("keydown", function(e){
 
 /* ================= Init ================= */
 buildPicker();
+buildEQ();
 selectScene(0);
 drawViz();
 </script>
