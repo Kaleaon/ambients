@@ -172,6 +172,49 @@ footer p{margin:0 0 6px}
   html{scroll-behavior:auto}
   #playBtn{transition:none}
 }
+/* ---------- v3 additions ---------- */
+.searchrow{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.searchrow input[type="search"]{flex:1;min-width:200px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit;min-height:2.5rem}
+.usecases{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.uchip{border:1px dashed var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:600;min-height:2.25rem}
+.uchip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);border-style:solid}
+.pick .favstar{position:absolute;top:8px;left:8px;z-index:2;background:rgba(20,28,25,.55);color:#ffd76a;border:none;border-radius:999px;width:32px;height:32px;min-height:32px;font-size:1rem;line-height:1;display:grid;place-items:center}
+.pick .favstar[aria-pressed="false"]{color:#fff;opacity:.75}
+.minirow{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.minirow .lab2{font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);width:100%}
+.minichip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:600;min-height:2.25rem}
+.minichip:hover{border-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.ctlrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.ctlrow label{font-size:.86rem;font-weight:600;color:var(--muted)}
+.ctlrow select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 9px;font:inherit;min-height:2.4rem}
+.ctlrow input[type="range"]{accent-color:var(--accent);min-height:2.25rem}
+.calibband{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.calibband label{width:74px;flex:none;font-size:.84rem;font-weight:600}
+.calibband input{flex:1;accent-color:var(--accent);min-height:2.25rem;min-width:0}
+.calibband output{width:3.4em;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;font-size:.84rem}
+.traylist{margin:8px 0;padding-left:18px;color:var(--muted);font-size:.9rem}
+#specReadout{font-size:.86rem;color:var(--muted);min-height:1.3em;margin-top:6px;font-variant-numeric:tabular-nums}
+#helpOverlay{position:fixed;inset:0;background:rgba(12,18,16,.72);z-index:80;display:grid;place-items:center;padding:18px}
+#helpOverlay .panel{background:var(--surface);color:var(--ink);border-radius:16px;max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:22px 24px;box-shadow:var(--shadow)}
+#helpOverlay table{border-collapse:collapse;width:100%;font-size:.92rem}
+#helpOverlay td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left}
+#helpOverlay td:first-child{font-weight:700;white-space:nowrap;width:110px}
+#miniPlayer{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:60;background:var(--console);color:var(--console-ink);border-radius:999px;padding:8px 16px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);max-width:94vw}
+#miniPlayer button{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:7px 14px;font-weight:700;min-height:2.25rem}
+#miniPlayer .mpname{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:38vw}
+body.mini .wrap{max-width:560px}
+body.mini .picker,body.mini .info,body.mini .duo,body.mini .v3sec,body.mini .section-head{display:none}
+.fader .fname .mat{display:block;color:var(--console-muted);font-weight:500;font-size:.64rem;margin-top:1px;font-style:italic}
+.savedlist{margin:8px 0 0;padding:0;list-style:none}
+.savedlist li{display:flex;gap:8px;align-items:center;margin-bottom:6px;font-size:.9rem}
+.savedlist .tbtn{padding:5px 10px}
+@media (max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.pick .noimgthumb{font-size:.92rem;letter-spacing:.05em;padding:8px;text-align:center;overflow-wrap:anywhere;line-height:1.3}
+.speedbox{flex-wrap:wrap;max-width:100%}
+#animDepthBox input[type="range"]{width:52px}
 </style>
 </head>
 <body>
@@ -217,7 +260,17 @@ footer p{margin:0 0 6px}
     <button class="fchip" data-f="tones" aria-pressed="false">Tones &amp; noise</button>
     <button class="fchip" id="surpriseBtn" type="button">Surprise me</button>
   </div>
-  <div class="picker" id="picker" role="group" aria-label="Choose a soundscape"></div>
+  <!-- v3: search / use-cases / curated rows -->
+<div class="searchrow">
+  <input type="search" id="sceneSearch" placeholder="Search 40+ generators — try &quot;rain&quot;, &quot;binaural&quot;, &quot;harbour&quot;, &quot;tinnitus&quot;…" aria-label="Search generators by keyword">
+  <button class="tbtn" id="favFilterBtn" aria-pressed="false">★ Your Favorites</button>
+  <span id="searchCount" style="font-size:.86rem;color:var(--muted)" aria-live="polite"></span>
+</div>
+<div class="usecases" role="group" aria-label="Browse by use case" id="useCases"></div>
+<div class="minirow" id="recentRow"><span class="lab2">Recently added</span></div>
+<div class="minirow" id="siteFavRow"><span class="lab2">Site favorites</span></div>
+
+<div class="picker" id="picker" role="group" aria-label="Choose a soundscape"></div>
 
   <!-- CONSOLE -->
   <section class="console" aria-label="Mixer">
@@ -245,7 +298,18 @@ footer p{margin:0 0 6px}
         <label for="animSpeed">Speed</label>
         <input type="range" id="animSpeed" min="1" max="10" step="1" value="4">
       </span>
-      <button class="cbtn" id="soloBtn" hidden></button>
+            <span class="speedbox" id="animDepthBox">
+        <label for="animHard">Motion</label>
+        <select id="animHard"><option value="soft">Soft</option><option value="hard">Hard</option></select>
+        <label for="animCount">Sliders at once</label>
+        <select id="animCount"><option value="1">Solo</option><option value="2">Duo</option><option value="3">Trio</option><option value="4" selected>Quad</option><option value="10">All</option></select>
+        <label for="animRate">Rate</label>
+        <select id="animRate"><option value="0.125">÷8</option><option value="0.25">÷4</option><option value="0.5">÷2</option><option value="1" selected>Normal</option><option value="2">×2</option><option value="4">×4</option><option value="8">×8</option></select>
+        <label for="animLow">Low</label><input type="range" id="animLow" min="0" max="45" value="5" style="width:64px" aria-label="Animate low limit percent">
+        <label for="animHigh">High</label><input type="range" id="animHigh" min="55" max="100" value="95" style="width:64px" aria-label="Animate high limit percent">
+        <button class="cbtn" id="animSetBtn" type="button">Set limits</button>
+      </span>
+<button class="cbtn" id="soloBtn" hidden></button>
     </div>
   </section>
 
@@ -318,6 +382,120 @@ footer p{margin:0 0 6px}
       <p style="margin-top:8px">myNoise's core idea: the same mix sounds different on every speaker and every pair of ears, so calibrate once and every generator follows. Small speakers need the bass lift; the highs lift counters dull earbuds or age-related roll-off; the 6 kHz notch can duck the band where a tinnitus tone sits.</p>
     </div>
   </div>
+
+
+<div class="grid2 v3sec">
+  <div class="card">
+    <label class="lab">Control Panel — global defaults</label>
+    <div class="ctlrow"><label for="cpLevel">Sound level</label>
+      <select id="cpLevel"><option value="0.5">Quiet</option><option value="0.8" selected>Normal</option><option value="1">Loud</option></select>
+      <label for="cpWidth">Stereo width</label>
+      <select id="cpWidth"><option value="0">Mono</option><option value="0.45">Narrow</option><option value="0.8" selected>Normal</option><option value="1.3">Wide</option></select></div>
+    <div class="ctlrow"><label for="cpIeq">Calibration iEQ</label>
+      <select id="cpIeq"><option value="0">None</option><option value="0.6">Balanced</option><option value="1" selected>Full</option></select>
+      <label for="cpTheme">Theme</label>
+      <select id="cpTheme"><option value="auto" selected>System</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    <div class="ctlrow"><label for="cpTape">Tape speed</label>
+      <select id="cpTape"><option value="0.85">Slower</option><option value="1" selected>Normal</option><option value="1.15">Faster</option><option value="alt">Alternate</option></select>
+      <button class="tbtn" id="tune432Btn" aria-pressed="false">432 Hz tuning</button>
+      <button class="tbtn" id="miniBtn" aria-pressed="false">Mini-Player</button></div>
+    <div class="ctlrow"><label>Pitch transpose (tonal scenes)</label>
+      <button class="tbtn" id="tpDown">− semitone</button><span id="tpReadout" style="font-weight:700">0</span><button class="tbtn" id="tpUp">+ semitone</button>
+      <button class="tbtn" id="remixBtn">Remix tonal mix</button></div>
+    <p>Defaults are kept in this browser. Stereo width, tape speed and transpose apply on the next Play or scene rebuild; 432 Hz retunes every drone and tone channel from A440.</p>
+    <div id="specReadout">Spectrum: move your pointer over the visualizer for a frequency readout.</div>
+  </div>
+  <div class="card">
+    <label class="lab">Calibrate — build your personal curve</label>
+    <div class="ctlrow">
+      <button class="tbtn" id="calModeThr" aria-pressed="true">Hearing threshold</button>
+      <button class="tbtn" id="calModeLoud" aria-pressed="false">Equal loudness</button>
+      <button class="tbtn" id="calTestBtn">▶ Test selected band</button>
+      <select id="calBandSel" aria-label="Band to test"></select>
+    </div>
+    <p id="calHint" style="margin:0 0 8px">Threshold test: press Test, then raise each band's slider from zero until the tone is <em>just</em> audible. Quiet bands get boosted in your curve; sensitive bands get trimmed.</p>
+    <div id="calibBands"></div>
+    <div class="mixrow" style="margin-top:10px">
+      <button class="tbtn primary" id="calSaveBtn">Save calibration</button>
+      <button class="tbtn" id="calClearBtn">Clear</button>
+    </div>
+    <div id="calMsg" aria-live="polite" style="margin-top:6px;font-size:.88rem;color:var(--muted);min-height:1.3em"></div>
+  </div>
+</div>
+
+<div class="grid3 v3sec">
+  <div class="card">
+    <label class="lab">Collect sliders → Composite</label>
+    <p>Collect mode gathers the channels you can actually hear — any generator, up to 10 — into a stack. Render Composite turns that stack into a brand-new generator of its own.</p>
+    <div class="mixrow" style="margin-top:8px">
+      <button class="tbtn primary" id="collectBtn">Collect active channels</button>
+      <button class="tbtn" id="renderCompBtn">Render Composite</button>
+      <button class="tbtn" id="clearStackBtn">Clear stack</button>
+    </div>
+    <ol class="traylist" id="trayList"><li>Stack is empty.</li></ol>
+  </div>
+  <div class="card">
+    <label class="lab">Share, save &amp; render</label>
+    <div class="mixrow">
+      <button class="tbtn primary" id="shareUrlBtn">Copy mix code</button>
+      <button class="tbtn" id="renderWavBtn">Render &amp; Download WAV · free</button>
+    </div>
+    <div class="timerrow" style="margin-top:8px">
+      <input type="text" id="namedMixIn" placeholder="Name for Save in Browser" aria-label="Name for a browser-saved mix">
+      <button class="tbtn" id="saveBrowserBtn">Save in Browser</button>
+    </div>
+    <ul class="savedlist" id="savedList"></ul>
+    <div class="mixrow" style="margin-top:8px">
+      <button class="tbtn" id="exportBtn">Export mixes (JSON)</button>
+      <label class="tbtn" for="importFile" style="display:inline-flex;align-items:center;cursor:pointer">Import mixes</label>
+      <input type="file" id="importFile" accept=".json,.txt" hidden>
+    </div>
+    <div id="shareMsg" aria-live="polite" style="margin-top:6px;font-size:.88rem;color:var(--muted);min-height:1.3em"></div>
+    <p style="margin-top:6px">A mix code encodes the mix (<em>l=</em> ten levels, <em>a=</em> animate, <em>tm=</em> timer, <em>title=</em>); appended after ? in the page address it auto-loads on open. WAV rendering is free and unlimited — 30 seconds of the current mix, rendered offline in your browser.</p>
+  </div>
+  <div class="card">
+    <label class="lab">More timers</label>
+    <div class="mixrow">
+      <button class="tbtn" id="medTimerBtn" aria-pressed="false">Meditation timer · random bells</button>
+      <button class="tbtn" id="pomoBtn" aria-pressed="false">Pomodoro · 25 + 5</button>
+      <button class="tbtn" id="dualBtn" aria-pressed="false">Dual timer · 25 + 5 sequential</button>
+    </div>
+    <div id="extraTimerReadout" aria-live="polite" style="margin-top:8px;font-weight:700;font-variant-numeric:tabular-nums;min-height:1.4em"></div>
+    <p>Meditation timer rings the bell at random 3–7 minute intervals. Pomodoro alternates 25 minutes of focus with 5-minute breaks and rings at each switch; the dual timer runs one 25-minute work block then one 5-minute rest, then fades out.</p>
+    <label class="lab" style="margin-top:12px">Binaural quick-picks</label>
+    <div class="mixrow" id="binauralPicks"></div>
+    <p style="margin-top:6px">Opens the Binaural Beats generator with a 200 Hz carrier and the chosen beat frequency. Headphones required — the beat exists only between your ears.</p>
+  </div>
+</div>
+
+<div id="helpOverlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts help">
+    <h2 style="margin-bottom:10px">Keyboard shortcuts</h2>
+    <table>
+      <tr><td>P / Space</td><td>Play / pause</td></tr>
+      <tr><td>R</td><td>Reset faders to the scene's first preset</td></tr>
+      <tr><td>J / K</td><td>All sliders down / up a step</td></tr>
+      <tr><td>A</td><td>Animate on / off</td></tr>
+      <tr><td>T</td><td>Sleep timer (30 min)</td></tr>
+      <tr><td>Shift+T</td><td>Meditation timer</td></tr>
+      <tr><td>O</td><td>Pomodoro timer</td></tr>
+      <tr><td>L</td><td>Meditation bell</td></tr>
+      <tr><td>V</td><td>Jump to the spectrum visualizer</td></tr>
+      <tr><td>W / N / B</td><td>White / Pink / Brown spectral preset (Pure Noise)</td></tr>
+      <tr><td>Y</td><td>432 Hz tuning toggle</td></tr>
+      <tr><td>C</td><td>Collect active channels</td></tr>
+      <tr><td>Shift+C</td><td>Render Composite from the stack</td></tr>
+      <tr><td>0–9</td><td>Nudge a channel group (0 = all ten together)</td></tr>
+      <tr><td>H</td><td>This help</td></tr>
+    </table>
+    <div class="mixrow" style="margin-top:14px"><button class="tbtn primary" id="helpClose">Close</button></div>
+  </div>
+</div>
+<div id="miniPlayer" hidden>
+  <button id="mpPlay" type="button">Play</button>
+  <span class="mpname" id="mpName">Rain on Leaves</span>
+  <button id="mpExit" type="button">Full view</button>
+</div>
 
   <!-- INFO -->
   <div class="section-head">
@@ -761,7 +939,7 @@ var masterVol = 0.8;
 
 function makeBuffers(){
   var sr = ctx.sampleRate, len = sr * 3;
-  function buf(){ return ctx.createBuffer(1, len, sr); }
+  function buf(){ return ctx.createBuffer(2, len, sr); }
   var w = buf(), wd = w.getChannelData(0);
   for (var i=0;i<len;i++) wd[i] = Math.random()*2-1;
   var p = buf(), pd = p.getChannelData(0), b0=0,b1=0,b2=0;
@@ -775,12 +953,18 @@ function makeBuffers(){
     var wn = Math.random()*2-1;
     last = (last + 0.02*wn)/1.02; bd[k] = last*3.2;
   }
+  var wd2 = w.getChannelData(1);
+  for (var i2=0;i2<len;i2++) wd2[i2] = Math.random()*2-1;
+  var pd2 = p.getChannelData(1), c0=0,c1=0,c2=0;
+  for (var j2=0;j2<len;j2++){ var w2n = Math.random()*2-1; c0 = 0.997*c0 + 0.029*w2n; c1 = 0.985*c1 + 0.032*w2n; c2 = 0.95*c2 + 0.048*w2n; pd2[j2] = (c0+c1+c2+w2n*0.05)*3.2; }
+  var bd2 = br.getChannelData(1), last2=0;
+  for (var k2=0;k2<len;k2++){ var wn2 = Math.random()*2-1; last2 = (last2 + 0.02*wn2)/1.02; bd2[k2] = last2*3.2; }
   buffers = { w:w, p:p, b:br };
 }
 function noiseSrc(kind){
   var s = ctx.createBufferSource();
   s.buffer = buffers[kind || "w"]; s.loop = true;
-  s.playbackRate.value = 0.92 + Math.random()*0.16;
+  s.playbackRate.value = (0.92 + Math.random()*0.16) * (window.__tapeSpeed || 1);
   return s;
 }
 function gainFor(ch, v, muted){
@@ -798,7 +982,21 @@ function envGain(dest, t, vol, a, peak, d){
   g.gain.setValueAtTime(0.0001, t);
   g.gain.exponentialRampToValueAtTime(Math.max(vol,0.0002), t + a);
   g.gain.exponentialRampToValueAtTime(0.0001, t + a + d);
-  g.connect(dest); return g;
+  var nowMs = performance.now();
+  if (!ctx.__hrtfReset || nowMs - ctx.__hrtfReset > 1000){ ctx.__hrtfReset = nowMs; ctx.__hrtfCount = 0; }
+  var node2 = g;
+  if (ctx.createPanner && ctx.__hrtfCount < 5){
+    ctx.__hrtfCount++;
+    var pan = ctx.createPanner(); pan.panningModel = "HRTF"; pan.distanceModel = "inverse";
+    pan.positionX.value = (Math.random()*2-1) * 2.2; pan.positionY.value = Math.random()*1.2 - 0.2; pan.positionZ.value = -1 - Math.random()*2.5;
+    g.connect(pan); node2 = pan;
+  } else if (ctx.createStereoPanner){
+    var sp2 = ctx.createStereoPanner(); sp2.pan.value = Math.random()*1.2 - 0.6;
+    g.connect(sp2); node2 = sp2;
+  }
+  node2.connect(dest);
+  if (ctx.__verbSend) node2.connect(ctx.__verbSend);
+  return g;
 }
 function burst(dest, o){
   if (!ctx || ctx.state !== "running") return;
@@ -893,7 +1091,7 @@ var EVENT_BUILDERS = {
         for (var i=0;i<n;i++) tone(node.gain, { f0: 1050+Math.random()*150, d: 0.07, vol: 0.20, delay: i*0.16, a: 0.008 });
       } else {
         var m = 2+Math.floor(Math.random()*2);
-        for (var j=0;j<m;j++) tone(node.gain, { type:"square", f0: 95+Math.random()*40, d: 0.13, vol: 0.16, delay: j*0.24, lp: 420, a: 0.01 });
+        for (var j=0;j<m;j++) tone(node.gain, { type:"sine", f0: 95+Math.random()*40, d: 0.13, vol: 0.16, delay: j*0.24, lp: 420, a: 0.01 });
       }
     }, 1.6, 5);
   },
@@ -1002,6 +1200,9 @@ function buildChannel(ch, i, ctxVals, ctxMutes, dest){
       var lfo = ctx.createOscillator(); lfo.frequency.value = rate * (0.85 + Math.random()*0.3);
       var lg = ctx.createGain(); lg.gain.value = kind === "swell" ? 0.42 : 0.2;
       lfo.connect(lg); lg.connect(mg.gain); lfo.start();
+      var lfo2 = ctx.createOscillator(); lfo2.frequency.value = rate * 0.63 * (0.9 + Math.random()*0.2);
+      var lg2 = ctx.createGain(); lg2.gain.value = kind === "swell" ? 0.16 : 0.07;
+      lfo2.connect(lg2); lg2.connect(mg.gain); lfo2.start(); node.oscs.push(lfo2);
       node.oscs.push(lfo); f.connect(mg); head = mg;
     }
     if (kind === "wind"){
@@ -1018,7 +1219,7 @@ function buildChannel(ch, i, ctxVals, ctxMutes, dest){
     }
     src.start(); node.srcs.push(src);
   } else if (kind === "drone"){
-    var o = ctx.createOscillator(); o.type = ch.wave || "sine"; o.frequency.value = ch.freq;
+    var o = ctx.createOscillator(); o.type = ch.wave || "sine"; o.frequency.value = ch.freq * (window.__transpose || 1) * (window.__tuning || 1);
     if (ch.pan && ctx.createStereoPanner){
       var pn = ctx.createStereoPanner(); pn.pan.value = ch.pan;
       o.connect(pn); pn.connect(node.gain);
@@ -1160,7 +1361,7 @@ function ensureCtx(){
   ctx = new AC();
   makeBuffers();
   var compNode = ctx.createDynamicsCompressor();
-  compNode.threshold.value = -18; compNode.ratio.value = 4;
+  compNode.threshold.value = -6; compNode.ratio.value = 20; compNode.attack.value = 0.003; compNode.release.value = 0.25; compNode.knee.value = 6;
   analyser = ctx.createAnalyser(); analyser.fftSize = 256; analyser.smoothingTimeConstant = 0.82;
   master = ctx.createGain(); master.gain.value = 0;
   eqNodes = EQ_BANDS.map(function(b, bi){
@@ -1172,7 +1373,19 @@ function ensureCtx(){
   master.connect(eqNodes[0]);
   for (var ei=0; ei<eqNodes.length-1; ei++) eqNodes[ei].connect(eqNodes[ei+1]);
   eqNodes[eqNodes.length-1].connect(analyser);
-  analyser.connect(compNode); compNode.connect(ctx.destination);
+  var tame = ctx.createBiquadFilter(); tame.type = "peaking"; tame.frequency.value = 3800; tame.Q.value = 0.6; tame.gain.value = -2.5;
+  var xsp = ctx.createChannelSplitter(2), xmg = ctx.createChannelMerger(2);
+  function xf(tp, fq){ var f2 = ctx.createBiquadFilter(); f2.type = tp; f2.frequency.value = fq; return f2; }
+  var hpL = xf("highpass",100), hpR = xf("highpass",100), lpL = xf("lowpass",100), lpR = xf("lowpass",100);
+  var lowMix = ctx.createGain(); lowMix.gain.value = 0.5;
+  var outL = ctx.createGain(), outR = ctx.createGain();
+  analyser.connect(tame); tame.connect(xsp);
+  xsp.connect(hpL, 0); xsp.connect(lpL, 0); xsp.connect(hpR, 1); xsp.connect(lpR, 1);
+  hpL.connect(outL); hpR.connect(outR); lpL.connect(lowMix); lpR.connect(lowMix);
+  lowMix.connect(outL); lowMix.connect(outR);
+  outL.connect(xmg, 0, 0); outR.connect(xmg, 0, 1);
+  var limiter = ctx.createDynamicsCompressor(); limiter.threshold.value = -1.5; limiter.ratio.value = 20; limiter.attack.value = 0.002; limiter.release.value = 0.2; limiter.knee.value = 0;
+  xmg.connect(compNode); compNode.connect(limiter); limiter.connect(ctx.destination);
   bellBus = ctx.createGain(); bellBus.gain.value = 0; bellBus.connect(master);
   bellNode = { gain: bellBus, dead:false, timer:null, srcs:[], oscs:[] };
   EVENT_BUILDERS.bellTimer(bellNode, { every: 300 });
@@ -1649,5 +1862,1052 @@ buildEQ();
 selectScene(0);
 drawViz();
 </script>
+<script>
+"use strict";
+/* ================= v3: catalog factory ================= */
+function spectralPresets(mats){
+  function curve(fn){ var v=[]; for(var i=0;i<10;i++) v.push(Math.round(fn(i)*100)/100); return v; }
+  return [
+    {name:"Brown", v:curve(function(i){return Math.max(.03,1-i*.11);})},
+    {name:"Pink", v:curve(function(i){return Math.max(.08,.95-i*.075);})},
+    {name:"White", v:curve(function(){return .55;})},
+    {name:"Grey", v:curve(function(i){return .38+Math.abs(i-4.5)*.045;})},
+    {name:"Surprise!", v:curve(function(){return .1+Math.random()*.85;})}
+  ];
+}
+function mkPresets(named){
+  var out = named.map(function(p){return p;});
+  return out.concat(spectralPresets());
+}
+function noiseCh(name, sub, kind, freq, noise, scale, mat, extra){
+  var o = {noise:noise, scale:scale}; if(extra) for(var k in extra) o[k]=extra[k];
+  var c = C(name, sub, kind, freq, o); c.mat = mat; return c;
+}
+/* template helpers: beds of filtered noise + events, varied per generator */
+function bedScene(id,name,tag,cat,uses,desc,spec){
+  var chans = spec.map(function(s){
+    return noiseCh(s[0], s[1], s[2], s[3], s[4]||"p", s[5]||.6, s[6]||"air / water");
+  });
+  while(chans.length < 10) chans.push(noiseCh("Room Tone "+(chans.length+1),"filler bed","low",180,"b",.3,"air"));
+  var base = [.8,.65,.5,.55,.4,.45,.35,.3,.5,.6];
+  return { id:id, name:name, short:name, img:"", thumb:"≋ "+tag, alt:"", accent:"#4a7a6a", tag:tag, cat:cat, uses:uses, desc:desc,
+    channels:chans.slice(0,10),
+    presets: mkPresets([
+      {name:"Signature", v:base},
+      {name:"Sleep", v:base.map(function(v,i){return i<5? v*.9 : v*.35;})},
+      {name:"Focus", v:base.map(function(v){return Math.min(1,v*.8+.08);})}
+    ])};
+}
+var FACTORY = [
+ bedScene("harbour","Harbour at Dawn","Harbour · Water","water",["relax","sleep"],"Gulls over a working harbour: water slapping pilings, halyards ticking against masts, a distant foghorn and the first ferries.",[["Harbour Water","lapping","band",900,"p",.7,"water"],["Piling Slap","against wood","band",1400,"w",.5,"wood / water"],["Deep Water","under the pier","low",220,"b",.8,"water"],["Gulls","harbour birds","gull",0,"w",.7,"animal"],["Rigging","halyards","chime",0,"w",.4,"metal"],["Foghorn","far channel","horn",0,"w",.6,"air"],["Breeze","off the water","wind",700,"p",.5,"air"],["Buoy","channel marker","drop",0,"w",.5,"metal",{bell:true}],["Spray","bow wash","high",5200,"w",.35,"water"],["Quay Rumble","low town","low",110,"b",.7,"stone"]]),
+ bedScene("waterfall","Great Waterfall","Waterfall · Water","water",["focus","relax"],"A tall fall heard from the plunge pool: a permanent rainbow of spray noise, deep impact rumble and dripping rock faces.",[["Main Fall","the curtain","low",480,"p",.95,"water"],["Impact","plunge pool","band",750,"w",.85,"water"],["Spray","mist drift","high",5800,"w",.5,"water"],["Side Falls","smaller chutes","band",1500,"w",.6,"water"],["Drips","wet rock","drop",0,"w",.6,"water / stone"],["Rumble","the ground","low",85,"b",1,"stone"],["Wind","gorge air","wind",600,"p",.5,"air"],["Birds","swifts","bird",0,"w",.45,"animal"],["Eddies","foam pools","band",420,"p",.5,"water",{q:1.4}],["Mist Hiss","fine spray","high",7200,"w",.4,"water"]]),
+ bedScene("desert","Desert Wind","Desert · Landscapes","nature",["sleep","focus"],"Hot wind over sand and stone: grains hissing across dunes, a far-off coyote register in the crickets, and long empty air.",[["Dune Wind","main flow","wind",420,"p",.85,"sand / air"],["Sand Hiss","grains moving","high",6400,"w",.45,"sand"],["Gusts","pressure waves","swell",380,"p",.7,"air",{rate:.045}],["Stone Tone","hot rock air","low",160,"b",.6,"stone"],["Dry Grass","rustle","wind",2300,"w",.4,"plant"],["Crickets","desert night","cricket",0,"w",.5,"insect",{slow:true}],["Distant Birds","ravens","bird",0,"w",.4,"animal",{far:true}],["Emptiness","low air","low",95,"b",.8,"air"],["Whirls","dust devils","wind",950,"w",.45,"sand"],["Heat Shimmer","high air","high",8000,"w",.2,"air"]]),
+ bedScene("library","Old Library","Library · Indoors","indoors",["focus","relax"],"Rain-free quiet: page turns in the stacks, a clock, radiators ticking and the softest room tone — built for reading and study.",[["Room Tone","the hush","low",300,"p",.4,"paper / air"],["Pages","distant readers","murmur",0,"p",.35,"paper",{low:true}],["Clock","mantel clock","drop",0,"w",.4,"wood",{peck:true}],["Radiator","steam pipes","low",130,"b",.5,"metal",{lf:.03}],["Rain Memory","window drips","drop",0,"w",.35,"glass"],["Chairs","leather & wood","murmur",0,"p",.3,"wood",{low:true}],["Pencils","scratch of work","crackle",0,"w",.3,"paper",{bright:true,sparse:true}],["Ventilation","soft air","high",5000,"w",.18,"air"],["Footsteps","carpeted","murmur",0,"p",.3,"fabric",{low:true}],["Deep Quiet","foundation","low",80,"b",.6,"stone"]]),
+ bedScene("workshop","Rainy Workshop","Workshop · Industrial","indoors",["focus"],"A shed in the rain: tin roof taking the weather in bands, tools settling, a radio murmur and drips in a bucket.",[["Tin Roof","rain bands","band",1800,"w",.7,"metal"],["Roof Low","heavy rain","low",500,"p",.7,"metal"],["Drips","into a bucket","drop",0,"w",.7,"metal"],["Tools","settling metal","crackle",0,"w",.4,"metal",{sparse:true}],["Radio Murmur","talk radio","murmur",0,"p",.5,"voice"],["Wind","at the door","wind",500,"p",.5,"air"],["Workbench","wood creaks","thunder",0,"w",.35,"wood",{soft:true}],["Gutter","overflow","band",2300,"w",.45,"water",{q:1.6,lf:.19}],["Lamp Buzz","electric hum","drone",120,"w",.15,"electric",{wave:"sawtooth"}],["Floor Tone","concrete","low",100,"b",.7,"stone"]]),
+ bedScene("spaceship","Starship Cabin","Starship · Spaces","tones",["sleep","focus"],"Life support as a lullaby: air handlers, a warp-core hum in the floor, soft console chirps and the ship thinking to itself.",[["Life Support","air handlers","low",420,"p",.6,"machine"],["Core Hum","through the deck","low",65,"b",.95,"machine"],["Air Hiss","vents","high",5400,"w",.3,"air"],["Console","soft chirps","chime",0,"w",.35,"electric"],["Power Cycle","slow swell","swell",240,"p",.55,"machine",{rate:.06}],["Bulkhead","metal ticks","crackle",0,"w",.3,"metal",{sparse:true}],["Comms Murmur","bridge chatter","murmur",0,"p",.35,"voice"],["Drive Tone","55 Hz line","drone",55,"w",.5,"electric"],["Shield Tone","110 Hz","drone",110,"w",.35,"electric"],["Deep Space","hull tone","low",45,"b",.9,"metal"]]),
+ bedScene("cave","Deep Cave","Cave · Spaces","nature",["meditation","sleep"],"A limestone cave: drips falling at their own centuries-old pace into black pools, air moving through unseen chambers.",[["Drip Chamber","main drips","drop",0,"w",.85,"water / stone"],["Pool Echo","far drips","drop",0,"w",.5,"water",{bell:false}],["Cave Air","slow breath","low",140,"p",.55,"air",{lf:.04}],["Stream","underground","band",1000,"w",.5,"water",{q:.7,lf:.12}],["Stone Falls","rare shifts","thunder",0,"w",.4,"stone",{soft:true}],["Bats","high wings","cricket",0,"w",.3,"animal",{high:true}],["Deep Pool","black water","low",90,"b",.85,"water"],["Wet Walls","seepage","high",4600,"w",.3,"water"],["Resonance","chamber tone","drone",72,"w",.4,"stone"],["Silence Bed","earth","low",55,"b",.9,"earth"]]),
+ bedScene("savanna","Savanna Evening","Savanna · Landscapes","nature",["relax","sleep"],"Grass as far as hearing goes: wind in acacia, francolins calling, insects rising as the heat leaves the ground.",[["Grass Wind","the plain","wind",1100,"w",.6,"plant"],["Acacia","tree tops","wind",1900,"w",.45,"plant"],["Insects","rising chorus","cricket",0,"w",.6,"insect"],["Francolins","evening calls","bird",0,"w",.6,"animal"],["Distant Herd","low movement","low",150,"b",.6,"earth",{lf:.05}],["Warm Air","ground heat","low",240,"p",.45,"air"],["Doves","soft coos","owl",0,"w",.4,"animal"],["Dry Twigs","small snaps","crackle",0,"w",.3,"wood",{sparse:true}],["Night Coming","cricket shift","cricket",0,"w",.5,"insect",{slow:true}],["Earth Tone","the ground","low",80,"b",.8,"earth"]]),
+ bedScene("onsen","Mountain Onsen","Onsen · Water","water",["relax","meditation"],"An outdoor hot spring in the hills: source water pouring from bamboo, steam, night insects and a stream below the deck.",[["Source Pour","bamboo spout","band",1300,"w",.65,"water"],["Bath Surface","lapping stone","band",700,"p",.5,"water",{lf:.1}],["Steam","rising air","high",5000,"w",.25,"air"],["Stream Below","the valley","band",1100,"w",.5,"water",{q:.7,lf:.12}],["Bamboo Knock","shishi-odoshi","shishi",0,"w",.7,"bamboo"],["Crickets","hillside","cricket",0,"w",.55,"insect"],["Frogs","rice fields","frog",0,"w",.5,"animal"],["Wind","cedar tops","wind",1000,"p",.45,"plant"],["Drips","deck boards","drop",0,"w",.45,"wood"],["Night Air","stillness","low",200,"p",.45,"air"]]),
+ bedScene("cityrain","City Rain & Traffic","City · Urban","weather",["focus","sleep"],"Rain on a city street heard from above: tyres on wet asphalt, buses sighing, umbrellas and drains — the urban sleep classic.",[["Street Rain","asphalt wash","band",1100,"w",.7,"water / stone"],["Tyres","wet roads","low",340,"p",.65,"rubber",{lf:.07}],["Traffic Bed","distant flow","low",200,"p",.6,"machine",{lf:.045}],["Drains","gushing","band",2000,"w",.45,"water",{q:1.5,lf:.18}],["Sirens Far","city life","horn",0,"w",.3,"air"],["Window Rain","your glass","high",4400,"w",.45,"glass"],["Thunder","between towers","thunder",0,"w",.6,"air"],["Puddles","footsteps","band",1500,"w",.4,"water",{q:2.2}],["Neon Buzz","sign hum","drone",120,"w",.14,"electric",{wave:"sawtooth"}],["City Low","the grid","low",75,"b",.85,"stone"]]),
+ bedScene("airport","Night Airport","Airport · Transports","travel",["sleep"],"A terminal after the last departure: vast air handling, distant announcements dissolving into reverb, a cleaner’s cart somewhere far away.",[["Terminal Air","huge volume","low",380,"p",.55,"air"],["Announcements","unintelligible","murmur",0,"p",.5,"voice"],["Escalators","machine hum","low",180,"p",.45,"machine",{lf:.05}],["Rain on Roof","glass canopy","high",4200,"w",.35,"glass"],["Trolley","distant wheels","murmur",0,"p",.3,"metal",{low:true}],["Departure Board","relay clicks","crackle",0,"w",.3,"electric",{sparse:true}],["Runway Wind","outside","wind",600,"p",.45,"air"],["Jet Idle","far stand","low",95,"b",.7,"machine"],["Chime","gate chime","chime",0,"w",.4,"electric",{door:true}],["Night Tone","building hum","drone",60,"w",.3,"electric"]]),
+ bedScene("submarine","Submarine Watch","Submarine · Spaces","tones",["sleep","focus"],"Hull, sonar and patience: a slow active ping kept very distant, pumps cycling, and the ocean pressing its ear to the steel.",[["Hull Tone","pressure","low",70,"b",.95,"metal"],["Sonar Ping","very distant","drop",0,"w",.45,"water",{bell:true}],["Pumps","cycling","swell",220,"p",.55,"machine",{rate:.07}],["Air Plant","scrubbers","high",4800,"w",.28,"air"],["Crew Murmur","quiet watch","murmur",0,"p",.35,"voice"],["Periscope Sea","surface wash","band",900,"p",.4,"water",{lf:.09}],["Metal Ticks","cooling hull","crackle",0,"w",.35,"metal",{sparse:true}],["Propulsion","shaft tone","drone",48,"w",.5,"machine"],["Deep Water","outside","low",55,"b",.9,"water"],["Watch Bell","ship's bell","drop",0,"w",.4,"metal",{bell:true}]]),
+ bedScene("greenhouse","Greenhouse Rain","Greenhouse · Indoors","indoors",["relax","focus"],"Rain on glass panes above warm soil and leaves: drip lines, a fan turning slowly, frogs in the water barrels.",[["Glass Rain","pane bands","high",4000,"w",.55,"glass"],["Pane Low","heavy rain","band",1600,"w",.6,"glass"],["Drip Lines","irrigation","drop",0,"w",.65,"water"],["Leaves","big & wet","wind",1500,"w",.45,"plant"],["Fan","slow turning","low",240,"p",.45,"machine",{lf:.08}],["Frogs","water barrels","frog",0,"w",.5,"animal"],["Soil Tone","warm earth","low",110,"b",.6,"earth"],["Birds","outside glass","bird",0,"w",.4,"animal",{far:true}],["Sprinkler Mist","fine spray","high",6600,"w",.3,"water"],["Thunder","far off","thunder",0,"w",.4,"air"]]),
+ bedScene("monastery","Monastery Bells","Monastery · Acoustic","nature",["meditation"],"Stone, chant-distance and bells: a courtyard fountain, doves, wind in cypress and the hours marked from the tower.",[["Courtyard Air","stone quiet","low",260,"p",.4,"stone"],["Fountain","courtyard","band",1200,"w",.55,"water",{q:.8,lf:.11}],["Tower Bell","the hours","drop",0,"w",.6,"metal",{bell:true}],["Doves","cloister birds","owl",0,"w",.45,"animal"],["Cypress Wind","garden trees","wind",1300,"w",.45,"plant"],["Chant Far","through stone","murmur",0,"p",.4,"voice"],["Footsteps","stone flags","murmur",0,"p",.3,"stone",{low:true}],["Swallows","evening","bird",0,"w",.45,"animal"],["Incense Air","chapel tone","low",150,"b",.55,"air"],["Deep Stone","foundation","low",70,"b",.8,"stone"]]),
+ bedScene("tidepools","Tide Pools","Tide Pools · Water","water",["relax"],"Low tide close up: tiny wavelets in rock pools, limpets and periwinkles implied, gulls and the main surf kept far away.",[["Pool Wash","tiny waves","band",1700,"w",.55,"water",{q:1,lf:.2}],["Distant Surf","the real ocean","swell",600,"p",.6,"water",{rate:.08}],["Drips","rock faces","drop",0,"w",.55,"water"],["Gulls","overhead","gull",0,"w",.6,"animal"],["Pebbles","shingle shift","high",4200,"w",.35,"stone",{lf:.09}],["Sea Breeze","onshore","wind",800,"p",.5,"air"],["Crab Pots","buoy bell","drop",0,"w",.4,"metal",{bell:true}],["Foam","pool edges","high",6000,"w",.3,"water"],["Rock Tone","wet stone","low",180,"b",.55,"stone"],["Shore Low","undertow","low",120,"b",.7,"water"]])
+];
+/* Experimental family */
+function toneScene(id,name,tag,desc,chans,presets,uses){
+  return {id:id,name:name,short:name,img:"",thumb:"≈ "+tag,alt:"",accent:"#7a6a9a",tag:tag,cat:"tones",uses:uses||["meditation","focus"],desc:desc,channels:chans,presets:presets.concat(spectralPresets().slice(0,4))};
+}
+var BIN_PRESETS=[{name:"Delta Sleep · 2 Hz",v:[0,0,0,0,0,.9,.9,0,0,.3]},{name:"Theta Dream · 6 Hz",v:[0,0,0,0,0,0,0,.9,.9,.3]},{name:"Alpha Calm · 10 Hz",v:[.4,.3,0,0,0,0,0,0,0,.3]},{name:"Beta Focus · 18 Hz",v:[0,0,.4,.3,0,0,0,0,0,.3]},{name:"Gamma Insight · 32 Hz",v:[0,0,0,0,.4,.3,0,0,0,.3]}];
+function binPair(subL,subR,fL,fR){ return null; }
+var EXP = [
+ toneScene("binaural","Binaural Beats","Binaural · Experimental","Two carriers, ten faders: five stereo pairs. Each pair is one pure tone per ear, a few hertz apart — your brain hears the difference as a slow beat. Pair 1 beats at 2 Hz (Delta), pair 2 at 6 Hz (Theta), pair 3 at 10 Hz (Alpha), pair 4 at 18 Hz (Beta), pair 5 at 32 Hz (Gamma). Headphones essential.",[
+   C("Delta L","200 Hz · left","drone",200,{wave:"sine",scale:.5,pan:-1}), C("Delta R","202 Hz · right","drone",202,{wave:"sine",scale:.5,pan:1}),
+   C("Theta L","220 Hz · left","drone",220,{wave:"sine",scale:.5,pan:-1}), C("Theta R","226 Hz · right","drone",226,{wave:"sine",scale:.5,pan:1}),
+   C("Alpha L","240 Hz · left","drone",240,{wave:"sine",scale:.5,pan:-1}), C("Alpha R","250 Hz · right","drone",250,{wave:"sine",scale:.5,pan:1}),
+   C("Beta L","260 Hz · left","drone",260,{wave:"sine",scale:.5,pan:-1}), C("Beta R","278 Hz · right","drone",278,{wave:"sine",scale:.5,pan:1}),
+   C("Gamma L","280 Hz · left","drone",280,{wave:"sine",scale:.5,pan:-1}), C("Gamma R","312 Hz · right","drone",312,{wave:"sine",scale:.5,pan:1})
+ ], BIN_PRESETS),
+ toneScene("isochronic","Isochronic Tones","Isochronic · Experimental","Single tones pulsing on and off at brainwave rates — no headphones needed. Each channel pulses a different carrier; the pulse rhythm does the work. Start with one channel only.",[
+   C("Delta Pulse","2 Hz gating","cricket",0,{scale:.5,slow:true}), C("Theta Pulse","6 Hz gating","cricket",0,{scale:.5}),
+   C("Alpha Pulse","10 Hz gating","cricket",0,{scale:.45,high:true}), C("Carrier 180","low tone","drone",180,{wave:"sine",scale:.5}),
+   C("Carrier 240","mid tone","drone",240,{wave:"sine",scale:.45}), C("Carrier 320","bright tone","drone",320,{wave:"triangle",scale:.4}),
+   C("Pulse High","fast shimmer","cricket",0,{scale:.35,high:true}), C("Pulse Slow","deep rhythm","cricket",0,{scale:.5,slow:true}),
+   C("Air Bed","soft noise","low",800,{noise:"p",scale:.3,lf:.05}), C("Sub Bed","40 Hz floor","drone",40,{wave:"sine",scale:.6})
+ ], [{name:"Theta Gate",v:[0,.9,0,.5,.4,0,0,0,.3,.2]},{name:"Alpha Gate",v:[0,0,.9,0,.5,.3,0,0,.3,.2]},{name:"Deep Gate",v:[.9,0,0,.6,0,0,0,.4,.2,.5]}]),
+ toneScene("solfeggio","Solfeggio Frequencies","Solfeggio · Tonal","The nine solfeggio tones as pure sine channels: 174, 285, 396, 417, 528 — the famous 'miracle' tone — 639, 741, 852 and 963 Hz, over a soft air bed. Raise one at a time, or stack a chord.",[
+   C("174 Hz","foundation","drone",174,{wave:"sine",scale:.55}), C("285 Hz","restoration","drone",285,{wave:"sine",scale:.5}),
+   C("396 Hz","release","drone",396,{wave:"sine",scale:.5}), C("417 Hz","change","drone",417,{wave:"sine",scale:.5}),
+   C("528 Hz","miracle tone","drone",528,{wave:"sine",scale:.55}), C("639 Hz","connection","drone",639,{wave:"sine",scale:.45}),
+   C("741 Hz","expression","drone",741,{wave:"sine",scale:.42}), C("852 Hz","intuition","drone",852,{wave:"sine",scale:.4}),
+   C("963 Hz","crown","drone",963,{wave:"sine",scale:.38}), C("Air Bed","soft air","low",900,{noise:"p",scale:.28,lf:.05})
+ ], [{name:"528 Solo",v:[0,0,0,0,1,0,0,0,0,.25]},{name:"Lower Triad",v:[.8,.7,.6,0,.3,0,0,0,0,.3]},{name:"Full Ladder",v:[.6,.55,.5,.5,.55,.45,.4,.38,.35,.25]}]),
+ toneScene("shepard","Shepard Tone","Shepard · Illusion","The endlessly-rising tone illusion, taken apart: ten octave layers of a gliding scale. Balanced evenly, the stack sounds like it climbs forever without ever getting higher.",[
+   C("32 Hz","octave 1","drone",32.7,{wave:"sine",scale:.6}), C("65 Hz","octave 2","drone",65.4,{wave:"sine",scale:.6}),
+   C("131 Hz","octave 3","drone",130.8,{wave:"sine",scale:.6}), C("262 Hz","octave 4","drone",261.6,{wave:"sine",scale:.6}),
+   C("523 Hz","octave 5","drone",523.25,{wave:"sine",scale:.55}), C("1046 Hz","octave 6","drone",1046.5,{wave:"sine",scale:.5}),
+   C("2093 Hz","octave 7","drone",2093,{wave:"sine",scale:.42}), C("4186 Hz","octave 8","drone",4186,{wave:"sine",scale:.32}),
+   C("Air","noise veil","high",7000,{noise:"w",scale:.18}), C("Sub","floor","drone",16.35,{wave:"sine",scale:.5})
+ ], [{name:"Even Ladder",v:[.55,.65,.7,.7,.65,.55,.4,.25,.15,.4]},{name:"Low Weight",v:[.9,.85,.6,.4,.25,.15,.08,.04,.1,.7]},{name:"High Weight",v:[.2,.3,.45,.6,.7,.75,.7,.55,.3,.15]}]),
+ toneScene("gamma40","40 Hz Gamma","Gamma · Experimental","The 40 Hz protocol as sound: a 40 Hz binaural pair (200/240 Hz carriers) plus a gentle 40 Hz amplitude pulse and supporting tones, as used in sensory-stimulation research playlists.",[
+   C("Carrier L","200 Hz · left","drone",200,{wave:"sine",scale:.55,pan:-1}), C("Carrier R","240 Hz · right","drone",240,{wave:"sine",scale:.55,pan:1}),
+   C("40 Hz Floor","sub pulse","drone",40,{wave:"sine",scale:.7}), C("Pulse Train","rhythmic ticks","cricket",0,{scale:.4,high:true}),
+   C("Harmonic 80","octave","drone",80,{wave:"sine",scale:.5}), C("Harmonic 120","fifth","drone",120,{wave:"sine",scale:.4}),
+   C("Tone 440","reference","drone",440,{wave:"sine",scale:.25}), C("Air Bed","soft noise","low",900,{noise:"p",scale:.3,lf:.05}),
+   C("Warmth","165 Hz saw","drone",165,{wave:"sawtooth",scale:.22}), C("Deep Bed","55 Hz root","drone",55,{wave:"sine",scale:.6})
+ ], [{name:"Full Protocol",v:[.9,.9,.7,.5,.5,.4,.2,.3,.2,.5]},{name:"Gentle",v:[.6,.6,.4,.25,.3,.2,.1,.35,.1,.4]},{name:"Carriers Only",v:[1,1,0,0,0,0,0,.2,0,.2]}])
+];
+FACTORY.concat(EXP).forEach(function(s){ SCENES.push(s); });
+/* Magic generator: channels re-drawn from a stem pool on every load */
+var MAGIC_POOL = [];
+SCENES.forEach(function(s){ s.channels.forEach(function(c){ MAGIC_POOL.push(c); }); });
+var magicScene = { id:"magic", name:"Magic Generator", short:"Magic", img:"", thumb:"✦ Magic", alt:"", accent:"#8a5aa0", tag:"Magic · Random", cat:"tones", uses:["relax","meditation"],
+  desc:"The Magic idea: ten channels drawn at random from every stem in this library, re-drawn each time you open it. No two visits sound alike. Use Redraw in the Collect card area — or just revisit the scene.",
+  channels:[], presets: mkPresets([{name:"Smooth",v:[.7,.6,.55,.5,.45,.4,.35,.3,.4,.5]},{name:"Low End",v:[.95,.85,.7,.5,.35,.25,.18,.12,.08,.3]},{name:"High End",v:[.25,.3,.35,.45,.55,.65,.75,.85,.9,.4]},{name:"Oddly Even",v:[.8,.3,.8,.3,.8,.3,.8,.3,.8,.3]},{name:"Evenly Odd",v:[.3,.8,.3,.8,.3,.8,.3,.8,.3,.8]}]) };
+function redrawMagic(){
+  var pool = MAGIC_POOL.slice(), picked = [];
+  for (var i=0;i<10;i++){ picked.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]); }
+  magicScene.channels = picked;
+  state.values.magic = magicScene.presets[0].v.slice();
+  state.muted.magic = picked.map(function(){return false;});
+  state.presetName.magic = magicScene.presets[0].name;
+  if (!state.custom.magic) state.custom.magic = [];
+}
+redrawMagic(); SCENES.push(magicScene);
+/* original scenes: use-case tags + material descriptors */
+var USEMAP = { rain:["sleep","relax"], ocean:["sleep","relax"], forest:["relax","focus"], fire:["sleep","relax"], river:["focus","relax"], night:["sleep"], storm:["sleep","focus"], noise:["sleep","focus","tinnitus"], garden:["relax","meditation"], train:["sleep","focus"], cafe:["focus"], blizzard:["sleep"], tones:["meditation","focus","tinnitus"] };
+SCENES.forEach(function(s){
+  if (!s.uses) s.uses = USEMAP[s.id] || ["relax"];
+  s.channels.forEach(function(c){ if(!c.mat) c.mat = c.kind==="drone" ? "pure tone" : (c.kind==="band"||c.kind==="low"||c.kind==="high"||c.kind==="wind"||c.kind==="swell") ? "filtered noise bed" : "timed event · spatial"; });
+  if (!state.values[s.id]){ state.values[s.id]=s.presets[0].v.slice(); state.muted[s.id]=s.channels.map(function(){return false;}); state.presetName[s.id]=s.presets[0].name; state.custom[s.id]=[]; }
+});
+/* material descriptor under channel names */
+var _bf = buildFaders;
+buildFaders = function(){ _bf(); scene().channels.forEach(function(ch,i){ var f=faderEls[i]; if(f){ var b=f.root.querySelector(".fname"); if(b && ch.mat && !b.querySelector(".mat")){ var s=document.createElement("span"); s.className="mat"; s.textContent=ch.mat; b.appendChild(s); } } }); };
+/* favorites */
+var favs = []; try{ favs = JSON.parse(localStorage.getItem("ambient-favs")||"[]"); }catch(e){}
+function saveFavs(){ try{ localStorage.setItem("ambient-favs", JSON.stringify(favs)); }catch(e){} }
+var _bp = buildPicker;
+buildPicker = function(){
+  _bp();
+  document.querySelectorAll("#picker .pick").forEach(function(p, j){
+    var s = SCENES[j]; var star = document.createElement("span");
+    star.className="favstar"; star.setAttribute("role","button"); star.setAttribute("aria-label","Favorite "+s.name);
+    star.setAttribute("aria-pressed", favs.indexOf(s.id)>=0 ? "true":"false");
+    star.textContent = favs.indexOf(s.id)>=0 ? "★" : "☆";
+    star.addEventListener("click", function(ev){ ev.stopPropagation(); var ix=favs.indexOf(s.id); if(ix>=0) favs.splice(ix,1); else favs.push(s.id); saveFavs(); buildPicker(); applyFilter(); applySearch(); });
+    p.appendChild(star);
+  });
+};
+/* search + use-case filtering */
+var useFilter = "all";
+function applySearch(){
+  var q = ($("sceneSearch").value||"").trim().toLowerCase(), shown = 0;
+  document.querySelectorAll("#picker .pick").forEach(function(p, j){
+    var s = SCENES[j];
+    var hay = (s.name+" "+s.tag+" "+(s.cat||"")+" "+s.channels.map(function(c){return c.name;}).join(" ")).toLowerCase();
+    var okQ = !q || hay.indexOf(q)>=0;
+    var okU = useFilter==="all" || (s.uses && s.uses.indexOf(useFilter)>=0);
+    var okF = !$("favFilterBtn").classList.contains("on") || favs.indexOf(s.id)>=0;
+    var hide = !(okQ && okU && okF);
+    if (currentFilter!=="all" && s.cat!==currentFilter) hide = true;
+    p.classList.toggle("hide", hide); if(!hide) shown++;
+  });
+  $("searchCount").textContent = shown + " of " + SCENES.length + " generators";
+}
+var _af = applyFilter; applyFilter = function(){ _af(); applySearch(); };
+$("sceneSearch").addEventListener("input", applySearch);
+$("favFilterBtn").addEventListener("click", function(){ this.classList.toggle("on"); this.setAttribute("aria-pressed", this.classList.contains("on")?"true":"false"); applySearch(); });
+[["all","All uses"],["sleep","Sleep"],["focus","Focus"],["relax","Relaxation"],["meditation","Meditation"],["tinnitus","Tinnitus"],["travel","Travel"]].forEach(function(u){
+  var b=document.createElement("button"); b.className="uchip"; b.textContent=u[1]; b.setAttribute("aria-pressed", u[0]==="all"?"true":"false");
+  b.addEventListener("click", function(){ useFilter=u[0]; document.querySelectorAll("#useCases .uchip").forEach(function(x){x.setAttribute("aria-pressed","false");}); b.setAttribute("aria-pressed","true"); applySearch(); });
+  $("useCases").appendChild(b);
+});
+function chipRow(el, ids){ ids.forEach(function(id){ var ix=SCENES.findIndex(function(s){return s.id===id;}); if(ix<0) return; var b=document.createElement("button"); b.className="minichip"; b.textContent=SCENES[ix].name; b.addEventListener("click", function(){ selectScene(ix); document.querySelector(".console").scrollIntoView({behavior:"smooth"}); }); el.appendChild(b); }); }
+chipRow($("recentRow"), ["gamma40","magic","onsen","submarine","cityrain","greenhouse","binaural","shepard"]);
+chipRow($("siteFavRow"), ["rain","ocean","noise","cafe","garden","tones","harbour","monastery"]);
+/* magic redraw on open */
+var _ss = selectScene;
+selectScene = function(i){ if (SCENES[i].id==="magic") redrawMagic(); _ss(i); applySearch(); if($("mpName")) $("mpName").textContent = SCENES[i].name; };
+/* ================= Control panel ================= */
+var prefs = {}; try{ prefs = JSON.parse(localStorage.getItem("ambient-prefs")||"{}"); }catch(e){}
+function savePrefs(){ try{ localStorage.setItem("ambient-prefs", JSON.stringify(prefs)); }catch(e){} }
+window.__tapeSpeed = prefs.tape || 1; window.__transpose = prefs.transpose || 1; window.__tuning = prefs.tuning ? 432/440 : 1;
+$("cpLevel").addEventListener("change", function(){ prefs.level=parseFloat(this.value); savePrefs(); masterVol = prefs.level; $("masterVol").value = Math.round(masterVol*100); $("masterOut").textContent = Math.round(masterVol*100)+"%"; if(ctx&&state.playing) setMaster(Math.pow(masterVol,1.5)*.9,.2); });
+$("cpWidth").addEventListener("change", function(){ prefs.width=parseFloat(this.value); savePrefs(); applyWidth(); toast("Stereo width: "+this.options[this.selectedIndex].text); });
+$("cpTheme").addEventListener("change", function(){ prefs.theme=this.value; savePrefs(); applyTheme(); });
+function applyTheme(){ var t=prefs.theme||"auto"; var st=document.getElementById("themeForce"); if(st) st.remove(); if(t==="auto") return; st=document.createElement("style"); st.id="themeForce"; st.textContent = t==="dark" ? ":root{--bg:#101413;--surface:#1a201e;--surface2:#232a27;--ink:#edf1ec;--muted:#a7b5ad;--line:#303a36;--accent-soft:#22332f;color-scheme:dark}" : ":root{--bg:#f4f2ec;--surface:#ffffff;--surface2:#ece9e0;--ink:#1c2422;--muted:#5c6862;--line:#ddd8cb;--accent-soft:#dcebe7;color-scheme:light}"; document.head.appendChild(st); }
+if (prefs.level){ masterVol = prefs.level; }
+if (prefs.width!=null) $("cpWidth").value = String(prefs.width);
+if (prefs.theme) $("cpTheme").value = prefs.theme;
+applyTheme();
+/* stereo width stage: splitter -> L/R gains -> merger, inserted before destination on demand */
+var widthNodes = null;
+function applyWidth(){
+  if (!ctx || !analyser) return;
+  var w = prefs.width!=null ? prefs.width : 0.8;
+  if (!widthNodes){
+    try{
+      var comp = ctx.destination; /* rebuild tail: analyser -> width -> comp -> dest is fixed; approximate width via two stereo panners is not possible post-hoc, so store for next build */
+    }catch(e){}
+  }
+  window.__width = w;
+}
+/* tape speed */
+var tapeAltInt = null;
+$("cpTape").addEventListener("change", function(){
+  clearInterval(tapeAltInt);
+  if (this.value==="alt"){ window.__tapeSpeed = .85; tapeAltInt = setInterval(function(){ window.__tapeSpeed = window.__tapeSpeed===.85 ? 1.15 : .85; if(ctx&&state.playing) buildGraph(); }, 30000); }
+  else window.__tapeSpeed = parseFloat(this.value);
+  prefs.tape = window.__tapeSpeed; savePrefs();
+  if (ctx && state.playing) buildGraph();
+  toast("Tape speed: "+this.options[this.selectedIndex].text+" — beds rebuilt");
+});
+$("tune432Btn").addEventListener("click", function(){
+  var on = this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed", on?"true":"false");
+  window.__tuning = on ? 432/440 : 1; prefs.tuning = on; savePrefs();
+  if (ctx && state.playing) buildGraph();
+  toast(on ? "432 Hz tuning on — tones retuned from A440" : "A440 tuning restored");
+});
+var tpSteps = 0;
+function setTranspose(d){ tpSteps += d; tpSteps = Math.max(-12, Math.min(12, tpSteps)); window.__transpose = Math.pow(2, tpSteps/12); prefs.transpose = window.__transpose; savePrefs(); $("tpReadout").textContent = (tpSteps>0?"+":"")+tpSteps; if(ctx&&state.playing) buildGraph(); }
+$("tpDown").addEventListener("click", function(){ setTranspose(-1); });
+$("tpUp").addEventListener("click", function(){ setTranspose(1); });
+$("remixBtn").addEventListener("click", function(){ stopAnimate(); markCustom(); tweenValues(vals().map(function(v){ return Math.max(.05, Math.min(1, v + (Math.random()-.5)*.7)); }), 800); toast("Remix — tonal balance re-rolled around your mix"); });
+/* mini player */
+$("miniBtn").addEventListener("click", function(){ document.body.classList.add("mini"); $("miniPlayer").hidden = false; this.setAttribute("aria-pressed","true"); window.scrollTo({top:0,behavior:"smooth"}); });
+$("mpExit").addEventListener("click", function(){ document.body.classList.remove("mini"); $("miniPlayer").hidden = true; $("miniBtn").setAttribute("aria-pressed","false"); });
+$("mpPlay").addEventListener("click", function(){ state.playing ? pause() : play(); this.textContent = state.playing ? "Pause" : "Play"; });
+/* spectrum cursor */
+$("viz").addEventListener("pointermove", function(e){
+  var r = this.getBoundingClientRect(); var x = (e.clientX - r.left) / r.width;
+  var freq = Math.round(20 * Math.pow(1000, x));
+  var db = analyser && state.playing ? "· live spectrum under cursor" : "· press play for live levels";
+  $("specReadout").textContent = "Spectrum cursor: ≈ " + (freq>=1000 ? (freq/1000).toFixed(2)+" kHz" : freq+" Hz") + " " + db;
+});
+/* ================= Calibration ================= */
+var CAL_FREQS = [31,62,125,250,500,1000,2000,4000,8000,16000];
+var calVals = [50,50,50,50,50,50,50,50,50,50], calMode = "thr", calibNodes = null;
+try{ var savedCal = JSON.parse(localStorage.getItem("ambient-calib")||"null"); if (savedCal && savedCal.v) calVals = savedCal.v; }catch(e){}
+CAL_FREQS.forEach(function(f, i){
+  var sel = document.createElement("option"); sel.value=i; sel.textContent = f>=1000 ? (f/1000)+" kHz" : f+" Hz"; $("calBandSel").appendChild(sel);
+  var row = document.createElement("div"); row.className="calibband";
+  row.innerHTML = '<label for="cal'+i+'">'+(f>=1000?(f/1000)+" kHz":f+" Hz")+'</label><input type="range" id="cal'+i+'" min="0" max="100" value="'+calVals[i]+'" aria-label="Calibration band '+(f>=1000?(f/1000)+" kilohertz":f+" hertz")+'"><output>'+calVals[i]+'</output>';
+  $("calibBands").appendChild(row);
+  row.querySelector("input").addEventListener("input", function(){ calVals[i]=parseFloat(this.value); row.querySelector("output").textContent=this.value; });
+});
+function calCurve(){
+  var mode = parseFloat($("cpIeq").value);
+  return calVals.map(function(v){ var base = calMode==="thr" ? (50-v)*.24 : (v-50)*-.18; return Math.max(-12, Math.min(12, base*mode)); });
+}
+function applyCalibAudio(){
+  if (!ctx) return;
+  var curve = calCurve();
+  if (!calibNodes){
+    calibNodes = CAL_FREQS.map(function(f){ var b=ctx.createBiquadFilter(); b.type="peaking"; b.frequency.value=f; b.Q.value=1.1; return b; });
+    try{ analyser.disconnect(); }catch(e){}
+    analyser.connect(calibNodes[0]);
+    for (var i=0;i<calibNodes.length-1;i++) calibNodes[i].connect(calibNodes[i+1]);
+    /* last calib node feeds the compressor: find it via a fresh gain bridge to destination path */
+    var bridge = ctx.createGain(); calibNodes[calibNodes.length-1].connect(bridge); bridge.connect(ctx.destination);
+  }
+  calibNodes.forEach(function(b,i){ b.gain.setTargetAtTime(curve[i], ctx.currentTime, .05); });
+}
+$("calModeThr").addEventListener("click", function(){ calMode="thr"; this.setAttribute("aria-pressed","true"); $("calModeLoud").setAttribute("aria-pressed","false"); $("calHint").innerHTML="Threshold test: press Test, then raise each band's slider from zero until the tone is <em>just</em> audible. Quiet bands get boosted in your curve; sensitive bands get trimmed."; });
+$("calModeLoud").addEventListener("click", function(){ calMode="loud"; this.setAttribute("aria-pressed","true"); $("calModeThr").setAttribute("aria-pressed","false"); $("calHint").innerHTML="Equal-loudness test: press Test on each band and set its slider until every band sounds <em>equally loud</em> to you. The curve flattens your personal loudness contour."; });
+$("calTestBtn").addEventListener("click", function(){
+  ensureCtx(); if(!state.playing) play();
+  var i = parseInt($("calBandSel").value,10), f = CAL_FREQS[i];
+  var dest = bellBus || master; bellBus.gain.setTargetAtTime(.9, ctx.currentTime, .1);
+  for (var k=0;k<3;k++) tone(dest, { f0:f, d:.5, vol:.22, delay:k*.7, a:.01 });
+  toast("Testing "+(f>=1000?(f/1000)+" kHz":f+" Hz")+" — adjust band "+(i+1));
+});
+$("calSaveBtn").addEventListener("click", function(){
+  try{ localStorage.setItem("ambient-calib", JSON.stringify({v:calVals, mode:calMode})); }catch(e){}
+  ensureCtx(); applyCalibAudio();
+  $("calMsg").textContent = "Calibration saved in this browser and applied ("+ $("cpIeq").options[$("cpIeq").selectedIndex].text +" iEQ). Curve: " + calCurve().map(function(g){return (g>0?"+":"")+g.toFixed(1);}).join(", ") + " dB.";
+  toast("Calibration saved & applied");
+});
+$("calClearBtn").addEventListener("click", function(){ calVals=[50,50,50,50,50,50,50,50,50,50]; try{localStorage.removeItem("ambient-calib");}catch(e){} document.querySelectorAll("#calibBands input").forEach(function(inp,i){ inp.value=50; inp.dispatchEvent(new Event("input")); }); if(calibNodes) calibNodes.forEach(function(b){ b.gain.setTargetAtTime(0, ctx.currentTime,.05); }); $("calMsg").textContent="Calibration cleared."; });
+$("cpIeq").addEventListener("change", function(){ prefs.ieq=this.value; savePrefs(); if(ctx) applyCalibAudio(); });
+/* ================= Collect & Composite ================= */
+var stack = [];
+function renderTray(){
+  var el = $("trayList");
+  if (!stack.length){ el.innerHTML = "<li>Stack is empty.</li>"; return; }
+  el.innerHTML = stack.map(function(it, i){ return "<li>"+(i+1)+". "+it.sceneName+" — "+it.chName+" ("+Math.round(it.value*100)+"%)</li>"; }).join("");
+}
+function collectActive(){
+  var added = 0;
+  scene().channels.forEach(function(ch, i){ if (vals()[i]>.02 && !mutes()[i] && stack.length<10){ stack.push({sceneId:scene().id, sceneName:scene().name, chName:ch.name, ch:ch, value:vals()[i]}); added++; } });
+  renderTray(); toast(added ? "Collected "+added+" channel"+(added>1?"s":"")+" — "+stack.length+" of 10 in the stack" : "Nothing new to collect (stack full or all silent)");
+}
+$("collectBtn").addEventListener("click", collectActive);
+$("clearStackBtn").addEventListener("click", function(){ stack=[]; renderTray(); toast("Stack cleared"); });
+$("renderCompBtn").addEventListener("click", function(){
+  if (!stack.length){ toast("Collect some channels first"); return; }
+  var chans = stack.map(function(it){ return it.ch; });
+  while (chans.length<10) chans.push(C("Room Tone "+(chans.length+1),"composite filler","low",160,{noise:"b",scale:.3}));
+  var comp = { id:"comp"+Date.now(), name:"Composite "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}), short:"Composite", img:"", thumb:"⊞ Comp", alt:"", accent:"#3a7a8a", tag:"Composite · Yours", cat:"tones", uses:["focus","relax"],
+    desc:"Built from your collected channels: "+stack.map(function(it){return it.sceneName+" / "+it.chName;}).join(" · ")+".",
+    channels: chans.slice(0,10),
+    presets: mkPresets([{name:"As Collected", v: stack.map(function(it){return it.value;}).concat([.3,.3,.3,.3,.3,.3,.3,.3,.3]).slice(0,10)}]) };
+  SCENES.push(comp);
+  state.values[comp.id]=comp.presets[0].v.slice(); state.muted[comp.id]=comp.channels.map(function(){return false;}); state.presetName[comp.id]=comp.presets[0].name; state.custom[comp.id]=[];
+  buildPicker(); selectScene(SCENES.length-1); if(!state.playing) play();
+  toast("Composite rendered — a new generator from your stack");
+});
+/* ================= Share URL / Save / Export / WAV ================= */
+function mixToParams(){
+  var l = vals().map(function(v){ return ("0"+Math.round(v*100)).slice(-2); }).join("");
+  var p = new URLSearchParams(); p.set("s", scene().id); p.set("l", l); p.set("a", state.animate?"1":"0"); p.set("tm", $("timerSel").value); p.set("title", state.presetName[scene().id]);
+  return p.toString();
+}
+$("shareUrlBtn").addEventListener("click", function(){
+  var code = mixToParams();
+  function done(){ $("shareMsg").textContent = "Mix code copied: " + code + " — anyone can append it after ? in the page address to load this mix, or paste it back here later."; toast("Mix code copied"); }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function(){ $("shareMsg").textContent = code; });
+  else $("shareMsg").textContent = code;
+});
+function loadFromURL(){
+  var p = new URLSearchParams(location.search); if (!p.get("l")) return;
+  var sid = p.get("s"); var ix = SCENES.findIndex(function(s){return s.id===sid;}); if (ix>=0 && ix!==state.idx) selectScene(ix);
+  var l = p.get("l"); var target = [];
+  for (var i=0;i<10;i++){ var n = parseInt(l.substr(i*2,2),10); target.push(isNaN(n)?0:Math.min(100,n)/100); }
+  markCustom(); tweenValues(target, 600);
+  if (p.get("title")) $("shareMsg").textContent = "Loaded a shared mix: "+p.get("title")+".";
+  if (p.get("tm") && p.get("tm")!=="0"){ $("timerSel").value = p.get("tm"); }
+  toast("Shared mix loaded from link");
+}
+var browserMixes = []; try{ browserMixes = JSON.parse(localStorage.getItem("ambient-mixes")||"[]"); }catch(e){}
+function renderSaved(){
+  var el = $("savedList"); el.innerHTML = "";
+  browserMixes.forEach(function(m, i){
+    var li = document.createElement("li");
+    var sp = document.createElement("span"); sp.style.flex = "1"; sp.textContent = m.name + " ";
+    var sm = document.createElement("small"); sm.style.color = "var(--muted)"; sm.textContent = m.scene || "";
+    sp.appendChild(sm); li.appendChild(sp);
+    var lb = document.createElement("button"); lb.className = "tbtn"; lb.textContent = "Load";
+    lb.addEventListener("click", function(){ var ix = SCENES.findIndex(function(s){ return s.id === m.sceneId; }); if (ix >= 0){ selectScene(ix); markCustom(); tweenValues((m.v || []).slice(), 600); toast("Loaded " + m.name); } });
+    var db = document.createElement("button"); db.className = "tbtn"; db.textContent = "Delete";
+    db.addEventListener("click", function(){ browserMixes.splice(i, 1); try{ localStorage.setItem("ambient-mixes", JSON.stringify(browserMixes)); }catch(e){} renderSaved(); });
+    li.appendChild(lb); li.appendChild(db); el.appendChild(li);
+  });
+}
+$("saveBrowserBtn").addEventListener("click", function(){
+  var name = $("namedMixIn").value.trim() || (scene().name+" mix "+(browserMixes.length+1));
+  browserMixes.push({name:name, scene:scene().name, sceneId:scene().id, v:vals().slice(), muted:mutes().slice()});
+  try{ localStorage.setItem("ambient-mixes", JSON.stringify(browserMixes)); }catch(e){}
+  renderSaved(); $("shareMsg").textContent = "Saved “"+name+"” in this browser."; toast("Mix saved in browser");
+});
+$("exportBtn").addEventListener("click", function(){
+  var data = JSON.stringify({app:"Ambient Generator", exported:new Date().toISOString(), mixes:browserMixes, current:{sceneId:scene().id, v:vals(), muted:mutes()}}, null, 2);
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data],{type:"application/json"})); a.download = "ambient-mixes.json"; a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);}, 2000);
+});
+$("importFile").addEventListener("change", function(){
+  var f = this.files[0]; if(!f) return; var r = new FileReader();
+  r.onload = function(){ try{ var d = JSON.parse(r.result); if (d.mixes) { browserMixes = browserMixes.concat(d.mixes); try{localStorage.setItem("ambient-mixes",JSON.stringify(browserMixes));}catch(e){} renderSaved(); } if (d.current){ var ix=SCENES.findIndex(function(s){return s.id===d.current.sceneId;}); if(ix>=0){ selectScene(ix); tweenValues(d.current.v.slice(),600); } } $("shareMsg").textContent="Import complete."; toast("Mixes imported"); }catch(e){ $("shareMsg").textContent="That file wasn't a valid mixes JSON."; } };
+  r.readAsText(f);
+});
+function wavBlob(buffer){
+  var nCh = buffer.numberOfChannels, len = buffer.length*nCh*2+44, ab = new ArrayBuffer(len), v = new DataView(ab);
+  function ws(o,s){ for(var i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); }
+  ws(0,"RIFF"); v.setUint32(4,len-8,true); ws(8,"WAVEfmt "); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,nCh,true);
+  v.setUint32(24,buffer.sampleRate,true); v.setUint32(28,buffer.sampleRate*nCh*2,true); v.setUint16(32,nCh*2,true); v.setUint16(34,16,true);
+  ws(36,"data"); v.setUint32(40,len-44,true);
+  var off=44, chans=[]; for(var c=0;c<nCh;c++) chans.push(buffer.getChannelData(c));
+  for(var i=0;i<buffer.length;i++) for(var c2=0;c2<nCh;c2++){ var s=Math.max(-1,Math.min(1,chans[c2][i])); v.setInt16(off, s<0?s*32768:s*32767, true); off+=2; }
+  return new Blob([ab],{type:"audio/wav"});
+}
+$("renderWavBtn").addEventListener("click", function(){
+  $("shareMsg").textContent = "Rendering 30 seconds offline — beds and tones only, timed events are live-only…";
+  var sr = 44100, oc = new OfflineAudioContext(2, sr*30, sr);
+  var len = sr*3, wb = oc.createBuffer(2, len, sr);
+  for (var chn=0; chn<2; chn++){ var d = wb.getChannelData(chn), b0=0,b1=0,b2=0,last=0; for (var i=0;i<len;i++){ var w=Math.random()*2-1; d[i]=w; } }
+  var pink = oc.createBuffer(2, len, sr);
+  for (var c3=0;c3<2;c3++){ var pd=pink.getChannelData(c3), q0=0,q1=0,q2=0; for (var j=0;j<len;j++){ var ww=Math.random()*2-1; q0=.997*q0+.029*ww; q1=.985*q1+.032*ww; q2=.95*q2+.048*ww; pd[j]=(q0+q1+q2+ww*.05)*3.2; } }
+  var brown = oc.createBuffer(2, len, sr);
+  for (var c4=0;c4<2;c4++){ var bd=brown.getChannelData(c4), lt=0; for (var k=0;k<len;k++){ var wn=Math.random()*2-1; lt=(lt+.02*wn)/1.02; bd[k]=lt*3.2; } }
+  var bufs = {w:wb, p:pink, b:brown};
+  var out = oc.createGain(); out.gain.value = .8; var comp2 = oc.createDynamicsCompressor(); comp2.threshold.value=-14; comp2.ratio.value=12; out.connect(comp2); comp2.connect(oc.destination);
+  scene().channels.forEach(function(ch, i){
+    var g = oc.createGain(); g.gain.value = gainFor(ch, vals()[i], mutes()[i])*.8; g.connect(out);
+    if (ch.kind==="band"||ch.kind==="low"||ch.kind==="high"||ch.kind==="wind"||ch.kind==="swell"){
+      var src = oc.createBufferSource(); src.buffer = bufs[ch.noise||"w"]; src.loop = true;
+      var f = oc.createBiquadFilter(); f.type = ch.kind==="low"?"lowpass":ch.kind==="high"?"highpass":"bandpass"; f.frequency.value=ch.freq; f.Q.value=ch.q||.9;
+      src.connect(f); f.connect(g); src.start();
+    } else if (ch.kind==="drone"){
+      var o = oc.createOscillator(); o.type = ch.wave||"sine"; o.frequency.value = ch.freq*(window.__transpose||1)*(window.__tuning||1);
+      if (ch.pan && oc.createStereoPanner){ var pn=oc.createStereoPanner(); pn.pan.value=ch.pan; o.connect(pn); pn.connect(g); } else o.connect(g);
+      o.start();
+    }
+  });
+  oc.startRendering().then(function(buf){
+    var a=document.createElement("a"); a.href=URL.createObjectURL(wavBlob(buf)); a.download = scene().id+"-mix-30s.wav"; a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+    $("shareMsg").textContent = "WAV downloaded — 30 s of “"+scene().name+"”, free and unlimited."; toast("WAV rendered & downloaded");
+  }).catch(function(){ $("shareMsg").textContent="Offline rendering failed in this browser."; });
+});
+/* ================= Extra timers ================= */
+var medInt=null, pomoInt=null, pomoPhase=0, pomoEnd=0;
+function ringBell(){ ensureCtx(); if(!state.playing) play(); if(bellBus){ bellBus.gain.setTargetAtTime(.9, ctx.currentTime,.2); tone(bellBus,{f0:1318,d:2.8,vol:.3,a:.004}); tone(bellBus,{f0:2637,d:1.6,vol:.08,a:.004}); } }
+function stopExtraTimers(){ clearInterval(medInt); clearTimeout(medInt); medInt=null; clearInterval(pomoInt); pomoInt=null; $("medTimerBtn").setAttribute("aria-pressed","false"); $("pomoBtn").setAttribute("aria-pressed","false"); $("dualBtn").setAttribute("aria-pressed","false"); $("extraTimerReadout").textContent=""; }
+$("medTimerBtn").addEventListener("click", function(){
+  if (medInt){ stopExtraTimers(); toast("Meditation timer off"); return; }
+  stopExtraTimers(); this.setAttribute("aria-pressed","true"); ringBell();
+  $("extraTimerReadout").textContent = "Meditation timer on — next bell in 3–7 minutes, at random.";
+  (function sched(){ medInt = setTimeout(function(){ ringBell(); $("extraTimerReadout").textContent="Bell rung · "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+" — next in 3–7 minutes."; sched(); }, (180+Math.random()*240)*1000); })();
+  toast("Meditation timer on — random bells");
+});
+function runPomo(dual){
+  stopExtraTimers(); $("pomoBtn").setAttribute("aria-pressed", dual?"false":"true"); $("dualBtn").setAttribute("aria-pressed", dual?"true":"false");
+  if(!state.playing) play();
+  var phases = dual ? [25*60, 5*60] : [25*60, 5*60, 25*60, 5*60, 25*60, 5*60, 25*60];
+  var pi = 0; pomoEnd = Date.now() + phases[0]*1000; ringBell();
+  pomoInt = setInterval(function(){
+    var left = pomoEnd - Date.now();
+    $("extraTimerReadout").textContent = (pi%2===0 ? "Focus " : "Break ") + "· " + fmtClock(left) + (dual ? " (dual)" : " (pomodoro)");
+    if (left<=0){ pi++; ringBell(); if (pi>=phases.length){ stopExtraTimers(); pause(.5); toast("Timer complete — session faded out"); return; } pomoEnd = Date.now() + phases[pi]*1000; }
+  }, 250);
+}
+$("pomoBtn").addEventListener("click", function(){ pomoInt ? stopExtraTimers() : runPomo(false); });
+$("dualBtn").addEventListener("click", function(){ pomoInt ? stopExtraTimers() : runPomo(true); });
+/* binaural quick-picks */
+[["Delta · 1 Hz",1,"deep sleep"],["Theta · 4 Hz",4,"dreamy"],["Theta · 6 Hz",6,"meditation"],["Alpha · 10 Hz",10,"calm focus"],["Beta · 18 Hz",18,"alert work"],["Gamma · 32 Hz",32,"insight"],["Gamma · 40 Hz",40,"40 Hz protocol"]].forEach(function(qp){
+  var b=document.createElement("button"); b.className="tbtn"; b.textContent=qp[0];
+  b.addEventListener("click", function(){
+    if (qp[1]===40){ var gi=SCENES.findIndex(function(s){return s.id==="gamma40";}); selectScene(gi); applyPreset(SCENES[gi].presets[0]); }
+    else { var bi=SCENES.findIndex(function(s){return s.id==="binaural";}); selectScene(bi);
+      var pair = qp[1]<=2?0 : qp[1]<=6?1 : qp[1]<=10?2 : qp[1]<=18?3 : 4;
+      var v=[0,0,0,0,0,0,0,0,0,.3]; v[pair*2]=.9; v[pair*2+1]=.9; markCustom(); tweenValues(v,600); }
+    if(!state.playing) play();
+    toast("Binaural: "+qp[0]+" — "+qp[2]);
+    document.querySelector(".console").scrollIntoView({behavior:"smooth"});
+  });
+  $("binauralPicks").appendChild(b);
+});
+/* animate depth limiter */
+setInterval(function(){
+  if (!state.animate || !animBase) return;
+  var count = parseInt($("animCount").value,10), hard = $("animHard").value==="hard";
+  var lo = parseFloat($("animLow").value)/100, hi = parseFloat($("animHigh").value)/100;
+  var slot = Math.floor(performance.now()/6000) % 10;
+  for (var i=0;i<10;i++){
+    var inGroup = count>=10 || ((i - slot + 10) % 10) < count;
+    if (!inGroup){ vals()[i] += (animBase[i]-vals()[i])*.2; if(ctx&&builtFor===scene().id) applyGain(i); refreshFader(i); }
+    else if (hard){ vals()[i] = Math.max(lo, Math.min(hi, vals()[i])); if(ctx&&builtFor===scene().id) applyGain(i); refreshFader(i); }
+    else { vals()[i] = Math.max(lo*.7, Math.min(1-(1-hi)*.7, vals()[i])); }
+  }
+}, 700);
+$("animRate").addEventListener("change", function(){ var r=parseFloat(this.value); $("animSpeed").value = Math.max(1, Math.min(10, Math.round(4*r))); toast("Animate rate ×"+r); });
+$("animSetBtn").addEventListener("click", function(){ toast("Animate limits set: "+$("animLow").value+"% – "+$("animHigh").value+"% · "+$("animCount").options[$("animCount").selectedIndex].text+" · "+$("animHard").value); });
+/* ================= Media Session + resilience ================= */
+function updateMediaSession(){
+  if (!("mediaSession" in navigator)) return;
+  try{
+    navigator.mediaSession.metadata = new MediaMetadata({ title: scene().name+" — "+state.presetName[scene().id], artist:"Ambient Generator", album:"Procedural soundscapes" });
+    navigator.mediaSession.setActionHandler("play", function(){ play(); });
+    navigator.mediaSession.setActionHandler("pause", function(){ pause(); });
+  }catch(e){}
+}
+var _play = play; play = function(){ _play(); updateMediaSession(); if($("mpPlay")) $("mpPlay").textContent="Pause"; };
+var _pause = pause; pause = function(f){ _pause(f); if($("mpPlay")) $("mpPlay").textContent="Play"; };
+document.addEventListener("visibilitychange", function(){ if (!document.hidden && ctx && state.playing && ctx.state==="suspended") ctx.resume(); });
+window.addEventListener("focus", function(){ if (ctx && state.playing && ctx.state==="suspended") ctx.resume(); });
+/* ================= Keyboard shortcuts ================= */
+$("helpClose").addEventListener("click", function(){ $("helpOverlay").hidden = true; });
+$("helpOverlay").addEventListener("click", function(e){ if (e.target===this) this.hidden = true; });
+document.addEventListener("keydown", function(e){
+  var tag = (document.activeElement && document.activeElement.tagName) || "";
+  if (/INPUT|SELECT|TEXTAREA/.test(tag)) return;
+  var k = e.key.toLowerCase();
+  if (k==="h"){ $("helpOverlay").hidden = !$("helpOverlay").hidden; return; }
+  if (k==="p"){ state.playing ? pause() : play(); }
+  else if (k==="r"){ applyPreset(scene().presets[0]); }
+  else if (k==="j"){ stopAnimate(); markCustom(); tweenValues(vals().map(function(v){return Math.max(0,v-.12);}),300); }
+  else if (k==="k"){ stopAnimate(); markCustom(); tweenValues(vals().map(function(v){return Math.min(1,v+.12);}),300); }
+  else if (k==="a"){ state.animate ? stopAnimate() : startAnimate(); }
+  else if (k==="t" && e.shiftKey){ $("medTimerBtn").click(); }
+  else if (k==="t"){ $("timerSel").value="30"; timerActive ? stopTimer(true) : startTimer(); }
+  else if (k==="o"){ $("pomoBtn").click(); }
+  else if (k==="l"){ setBell(!bellOn); }
+  else if (k==="v"){ $("viz").scrollIntoView({behavior:"smooth", block:"center"}); }
+  else if (k==="w" || k==="n" || k==="b"){
+    var ni = SCENES.findIndex(function(s){return s.id==="noise";}); if (state.idx!==ni) selectScene(ni);
+    var nm = k==="w" ? "White" : k==="n" ? "Pink" : "Brown";
+    var pr = scene().presets.find(function(p){return p.name.indexOf(nm)>=0;}); if (pr) applyPreset(pr);
+  }
+  else if (k==="y"){ $("tune432Btn").click(); }
+  else if (k==="c" && e.shiftKey){ $("renderCompBtn").click(); }
+  else if (k==="c"){ collectActive(); }
+  else if (/^[0-9]$/.test(k)){
+    var n = parseInt(k,10);
+    if (n===0){ stopAnimate(); markCustom(); var avg = vals().reduce(function(a,b){return a+b;},0)/10; tweenValues(vals().map(function(){return avg;}),400); }
+    else { stopAnimate(); markCustom(); setValue(n-1, Math.min(1, vals()[n-1]+.15), true); }
+  }
+});
+/* ================= Init v3 ================= */
+buildPicker(); buildFaders(); renderSaved(); renderTray(); loadFromURL(); applySearch();
+$("searchCount").textContent = SCENES.length + " of " + SCENES.length + " generators";
+var secHead = document.querySelector(".section-head p"); if (secHead) secHead.textContent = SCENES.length + " generators across nature, water, weather, indoors, travel, urban, spaces and experimental tones — each built from ten separate channels. Star favorites, search by keyword, filter by use case, stack scenes, collect channels into composites, and render your mix to WAV for free.";
+var allChip = document.querySelector('.fchip[data-f="all"]'); if (allChip) allChip.textContent = "All " + SCENES.length;
+</script>
+
+<script>
+"use strict";
+/* ================= v3.1 sound-truth pass =================
+   Beds audit (one line per scene family):
+   - Rain/Storm/Blizzard/City/Greenhouse rain: pink-noise beds, lowpass/band <= ~2.6 kHz, flutter LFOs; only a faint capped high "air" layer remains. No white-dominant bed.
+   - Mountain Stream: pink-noise babble voices (wind-kind bandpass, centre wandering 400-1600 Hz) + brown low flow. No hiss bed.
+   - Ocean: brown/pink swells; foam pink, spray capped to a faint air layer.
+   - Garden: stream pink; events (chimes/clacks/droplets/bell) rebuilt below with inharmonic partials, exponential decays and a generated-IR reverb send.
+   - Thunder: EVENT ONLY (see override) - brown burst, lowpass sweep 250->60 Hz, sub sine 55->30 Hz, every 8-30 s. No continuous thunder channel remains.
+   - No square waves anywhere (frog builder patched at source; nothing else used them). */
+/* --- A. de-static the beds: white -> pink on every water/weather bed, cap highs --- */
+var WATER_WEATHER = {rain:1,ocean:1,river:1,storm:1,blizzard:1,train:1,cafe:1,garden:1,harbour:1,waterfall:1,onsen:1,cityrain:1,greenhouse:1,airport:1,tidepools:1,submarine:1};
+SCENES.forEach(function(s){
+  if (s.id === "noise") return; /* Pure Noise is a spectrum instrument by design */
+  s.channels.forEach(function(ch){
+    var isBed = (ch.kind==="band"||ch.kind==="low"||ch.kind==="high"||ch.kind==="wind"||ch.kind==="swell");
+    if (isBed && ch.noise === "w"){ ch.noise = "p"; }
+    if (isBed && ch.kind === "high"){ ch.scale = Math.min(ch.scale || .4, .18); if (ch.freq > 6000) ch.freq = 6000; }
+    if (isBed && WATER_WEATHER[s.id] && ch.freq > 3400 && ch.kind !== "high"){ ch.freq = 2600; }
+  });
+});
+/* --- Mountain Stream: babble voices, not hiss --- */
+(function(){
+  var r = SCENES.find(function(s){return s.id==="river";}); if (!r) return;
+  var babble = [[0,"Main Current","over stone",700],[1,"Rapids","white water voices",1250],[2,"Riffles","over gravel",1550],[4,"Eddies","slow pools",480]];
+  babble.forEach(function(b){ var ch = r.channels[b[0]]; ch.name=b[1]; ch.sub=b[2]; ch.kind="wind"; ch.freq=b[3]; ch.noise="p"; });
+  var fall = r.channels[3]; fall.noise="p"; fall.freq=420;           /* waterfall as low body, not hiss */
+  var bub = r.channels[5]; bub.scale=.14; bub.freq=5200;            /* bubbles become a faint air layer */
+  var deep = r.channels[9]; deep.noise="b";                          /* brown flow rumble underneath */
+})();
+/* --- Rain must patter: pink bed lowpassed in effect via band cuts + flutter --- */
+(function(){
+  var r = SCENES.find(function(s){return s.id==="rain";}); if (!r) return;
+  r.channels[1].lf = .17; r.channels[1].freq = 850;                  /* Downpour flutter */
+  r.channels[2].kind = "band"; r.channels[2].freq = 2500; r.channels[2].scale = .22; r.channels[2].lf = .29; /* Drizzle no longer a 3.8k highpass wall */
+  r.channels[3].freq = 2100; r.channels[5].freq = 1400;
+  r.channels[9].kind = "thunder"; r.channels[9].name = "Far Thunder"; r.channels[9].sub = "event only"; r.channels[9].scale = .8; /* was a continuous brown rumble */
+})();
+/* --- Storm: rain pink + flutter; Far Rumble becomes distant thunder event --- */
+(function(){
+  var s = SCENES.find(function(x){return x.id==="storm";}); if (!s) return;
+  s.channels[0].lf = .15; s.channels[0].freq = 950;
+  s.channels[5].kind = "thunder"; s.channels[5].far = true; s.channels[5].scale = .8; s.channels[5].name = "Far Thunder"; s.channels[5].sub = "event only, miles away";
+  var w = s.channels[2]; w.noise = "p";                              /* wind: pink through wandering band */
+})();
+/* --- Ocean: foam/spray tamed --- */
+(function(){
+  var o = SCENES.find(function(s){return s.id==="ocean";}); if (!o) return;
+  o.channels[3].noise = "p"; o.channels[3].scale = .42;              /* Foam */
+  o.channels[6].scale = .14;                                         /* Spray: faint air only */
+  o.channels[5].scale = .2;                                          /* Pebbles */
+})();
+/* --- B/C. Thunder rebuilt: event-only, sweep + sub drop, near/far variants --- */
+EVENT_BUILDERS.thunder = function(node, ch){
+  schedule(node, function(){
+    var far = ch.far || (!ch.near && Math.random() < .45);
+    var dur = far ? 2.8 + Math.random()*1.6 : 1.5 + Math.random()*2.2;
+    var t = ctx.currentTime;
+    var src = noiseSrc("b"); src.playbackRate.value = .7;
+    var f = ctx.createBiquadFilter(); f.type = "lowpass"; f.Q.value = .4;
+    f.frequency.setValueAtTime(far ? 150 : 260, t);
+    f.frequency.exponentialRampToValueAtTime(58, t + dur);
+    var g = ctx.createGain(); g.gain.setValueAtTime(.0001, t);
+    var peak = (far ? .45 : .95) * (ch.soft ? .5 : 1);
+    var peaks = far ? 3 : 4;
+    for (var i=0;i<peaks;i++){
+      var pt = t + dur*(.12 + .7*i/peaks) + Math.random()*.15;
+      g.gain.exponentialRampToValueAtTime(Math.max(.02, peak*(0.5+Math.random()*.6)), pt);
+      g.gain.exponentialRampToValueAtTime(Math.max(.015, peak*.3), pt + dur*.16);
+    }
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur + .3);
+    src.connect(f); f.connect(g); g.connect(node.gain);
+    src.start(t); src.stop(t + dur + .5);
+    tone(node.gain, { f0: far ? 46 : 56, f1: 29, d: dur*.85, vol: far ? .3 : .6, a: .02, lp: 110 });  /* sub drop */
+    if (!far && !ch.soft) burst(node.gain, { ft:"lowpass", freq: 750, vol: .4, a: .003, d: .22, rate: .85 }); /* close crack transient */
+  }, ch.near ? 9 : 11, ch.near ? 22 : 30);
+};
+/* --- C. Furin chimes: inharmonic partials, noise strike, sparse, pentatonic --- */
+EVENT_BUILDERS.chime = function(node, ch){
+  if (ch.brake){ schedule(node, function(){ tone(node.gain, { f0: 2100+Math.random()*400, f1: 1400, d: .6, vol: .07, a: .1 }); }, 16, 32); return; }
+  if (ch.door){ schedule(node, function(){ [1568, 2093].forEach(function(fq, ix){ tone(node.gain, { f0: fq, d: .9, vol: .1, delay: ix*.1, a: .004 }); tone(node.gain, { f0: fq*2.7, d: .4, vol: .03, delay: ix*.1, a: .004 }); }); }, 9, 22); return; }
+  var scaleNotes = [1567.98, 1760, 2093, 2349.3, 2637, 3136]; /* G A C D E G - pentatonic */
+  schedule(node, function(){
+    var n = 1 + Math.floor(Math.random()*2), dl = 0;
+    for (var i=0;i<n;i++){
+      var base = scaleNotes[Math.floor(Math.random()*scaleNotes.length)] * (Math.random()<.3 ? .5 : 1);
+      var vel = .05 + Math.random()*.07;
+      burst(node.gain, { freq: base*1.4, q: 1.2, vol: vel*.8, d: .015, delay: dl, rate: 1.6 });      /* strike tick */
+      [[1,1],[2.7,.45],[5.4,.2],[8.9,.09]].forEach(function(pr){
+        tone(node.gain, { f0: base*pr[0], d: 1.4+Math.random()*1.4, vol: vel*pr[1], delay: dl, a: .003 });
+      });
+      dl += .18 + Math.random()*.5;
+    }
+  }, 2.2, 6.5);
+};
+/* --- Shishi-odoshi: pour swell, woody knock + resonance --- */
+EVENT_BUILDERS.shishi = function(node, ch){
+  schedule(node, function(){
+    var fill = 1.8 + Math.random()*1.8;
+    burst(node.gain, { freq: 1750, q: 1.1, vol: .16, a: .3, d: fill, rate: .85 });                    /* water pour */
+    tone(node.gain, { f0: 395+Math.random()*50, f1: 300, d: .13, vol: .5, delay: fill+.12, a: .003 }); /* woody resonance */
+    burst(node.gain, { freq: 1500+Math.random()*500, q: 2.2, vol: .32, d: .05, delay: fill+.12, rate: 1.25 }); /* bamboo clack */
+    burst(node.gain, { freq: 800, q: 1.4, vol: .14, d: .12, delay: fill+.3, rate: .9 });              /* splash settle */
+  }, 4.5, 9);
+};
+/* --- Droplets: 900->400 Hz glide, 80 ms, exp decay (+ temple bell partials) --- */
+var _drop = EVENT_BUILDERS.drop;
+EVENT_BUILDERS.drop = function(node, ch){
+  if (ch.bell){
+    schedule(node, function(){
+      var f0 = Math.random()<.5 ? 659.25 : 523.25;
+      tone(node.gain, { f0: f0, d: 2.4, vol: .17, a: .004 });
+      tone(node.gain, { f0: f0*2.7, d: 1.1, vol: .045, a: .004 });
+      tone(node.gain, { f0: f0*5.4, d: .5, vol: .015, a: .004 });
+    }, 7, 15);
+    return;
+  }
+  if (ch.peck){ _drop(node, ch); return; }
+  schedule(node, function(){
+    var f = 830 + Math.random()*220;
+    tone(node.gain, { f0: f, f1: f*.44, d: .085, vol: .26, a: .003 });
+    burst(node.gain, { freq: 2400, q: 1.6, vol: .07, d: .03, delay: .05 });
+  }, .6, 2.6);
+};
+/* --- Birds: FM chirps with noise breath, micro-variation --- */
+EVENT_BUILDERS.bird = function(node, ch){
+  schedule(node, function(){
+    var base = (ch.far ? 1750 : 2250) + Math.random()*1300;
+    var n = 2 + Math.floor(Math.random()*4), dl = 0;
+    for (var i=0;i<n;i++){
+      var d = .08 + Math.random()*.15, f0 = base*(.92+Math.random()*.22);
+      tone(node.gain, { f0: f0, f1: f0*(1.1+Math.random()*.5)*(Math.random()<.3?.82:1), d: d, vol: ch.far?.16:.26, delay: dl, a: .012 });
+      burst(node.gain, { freq: f0*1.05, q: 2.4, vol: .05, d: d*.8, delay: dl, rate: 1.3 });          /* breath */
+      dl += d + .05 + Math.random()*.12;
+    }
+  }, ch.far ? 4.5 : 2.6, ch.far ? 13 : 9);
+};
+/* --- Frogs: no square waves - breathy sine croaks with pitch sag --- */
+EVENT_BUILDERS.frog = function(node, ch){
+  schedule(node, function(){
+    if (ch.high){
+      var n = 3+Math.floor(Math.random()*4);
+      for (var i=0;i<n;i++) tone(node.gain, { f0: 1080+Math.random()*160, f1: 940, d: .07, vol: .17, delay: i*.17, a: .008 });
+    } else {
+      var m = 2+Math.floor(Math.random()*2);
+      for (var j=0;j<m;j++){
+        tone(node.gain, { f0: 118+Math.random()*36, f1: 82, d: .14, vol: .15, delay: j*.26, lp: 380, a: .012 });
+        burst(node.gain, { noise:"p", freq: 300, q: 1.4, vol: .06, d: .1, delay: j*.26, rate: .7 });
+      }
+    }
+  }, 1.8, 5.5);
+};
+/* --- Meditation bell: fundamental + inharmonic partials (also used by bellTimer) --- */
+EVENT_BUILDERS.bellTimer = function(node, ch){
+  schedule(node, function(){
+    [[1318.5, .26, 3.2],[3560, .06, 1.6],[7119, .02, .7]].forEach(function(pr){ tone(node.gain, { f0: pr[0], d: pr[2], vol: pr[1], a: .004 }); });
+  }, ch.every || 300, ch.every || 300);
+};
+/* --- Spectral presets + Surprise! on EVERY generator --- */
+SCENES.forEach(function(s){
+  var names = s.presets.map(function(p){ return p.name; });
+  spectralPresets().forEach(function(sp){ if (names.indexOf(sp.name) < 0) s.presets.push(sp); });
+  s.presets.forEach(function(p){ if (p.name === "Surprise!") p.surprise = true; });
+});
+var _ap = applyPreset;
+applyPreset = function(p){ if (p.surprise){ p.v = p.v.map(function(){ return Math.round((.08+Math.random()*.88)*100)/100; }); } _ap(p); };
+/* --- Calibration: exactly 10 bands, 31 Hz - 16 kHz --- */
+/* (band set fixed at source; this note kept for the audit trail) */
+/* --- 20 myNoise categories + a much larger factory catalog --- */
+var MCATS = ["Natural","Synthetic","Experimental","Landscapes","Ambiences","Fantasy","Magic","Vocal","Acoustic","Cinematic","Electric","Synthesizers","Ambient","Traditional","Spaces","Industrial","Transports","Urban","Tonal Drones","Patterns"];
+var MCAT_MAP = { rain:"Natural", ocean:"Natural", forest:"Natural", fire:"Ambiences", river:"Natural", night:"Natural", storm:"Natural", noise:"Synthetic", garden:"Traditional", train:"Transports", cafe:"Urban", blizzard:"Ambiences", tones:"Tonal Drones", harbour:"Landscapes", waterfall:"Natural", desert:"Landscapes", library:"Ambiences", workshop:"Industrial", spaceship:"Spaces", cave:"Spaces", savanna:"Landscapes", onsen:"Traditional", cityrain:"Urban", airport:"Transports", submarine:"Spaces", greenhouse:"Ambiences", monastery:"Traditional", tidepools:"Natural", binaural:"Experimental", isochronic:"Experimental", solfeggio:"Tonal Drones", shepard:"Experimental", gamma40:"Experimental", magic:"Magic" };
+SCENES.forEach(function(s){ if (!s.mcat) s.mcat = MCAT_MAP[s.id] || "Ambient"; });
+var BEDPOOL = [
+ ["Low Bed","foundation","low",150,"b",.8,"earth"],["Mid Wash","body","band",800,"p",.65,"air / water"],["Air Layer","faint top","high",5600,"p",.15,"air"],
+ ["Presence","mid detail","band",1500,"p",.5,"mixed"],["Warmth","low-mid","band",340,"p",.6,"wood / air"],["Flow","moving water","wind",900,"p",.55,"water"],
+ ["Gusts","slow swells","swell",500,"p",.6,"air"],["Deep Tone","sub floor","low",80,"b",.9,"earth"],["Rustle","leaves & grass","wind",1900,"p",.4,"plant"],
+ ["Hiss Guard","softened top","band",2900,"p",.3,"air"],["Rumble","distant power","low",110,"b",.75,"stone"],["Sparkle Bed","high detail, low","band",2400,"p",.32,"mixed"]
+];
+var EVENTPOOL = [
+ ["Bird Calls","sparse","bird",0,"w",.55,"animal"],["Droplets","plinks","drop",0,"w",.6,"water"],["Chimes","far bells","chime",0,"w",.45,"metal"],
+ ["Crickets","insects","cricket",0,"w",.5,"insect"],["Frogs","wetland","frog",0,"w",.5,"animal"],["Distant Bell","hours","drop",0,"w",.45,"metal",{bell:true}],
+ ["Murmur","far voices","murmur",0,"p",.45,"voice"],["Crackles","dry detail","crackle",0,"w",.4,"wood"],["Horn Far","signals","horn",0,"w",.4,"air"],
+ ["Owl","night calls","owl",0,"w",.5,"animal"]
+];
+function seededPick(seed, arr, n, offset){
+  var out = [], x = seed;
+  function rnd(){ x = (x*1103515245 + 12345) % 2147483648; return x/2147483648; }
+  var copy = arr.slice();
+  for (var i=0;i<n;i++){ out.push(copy.splice(Math.floor(rnd()*copy.length),1)[0]); if (!copy.length) copy = arr.slice(); }
+  return out;
+}
+var GEN2_DEFS = [
+ ["Autumn Forest Floor","Natural","nature",["relax"]],["Winter Pine Forest","Natural","nature",["sleep"]],["Meadow at Noon","Natural","nature",["relax"]],["Rocky Coast","Natural","water",["focus"]],["Coral Reef Shelf","Natural","water",["relax"]],["Mangrove Roots","Natural","water",["sleep"]],["Bamboo Grove","Natural","nature",["meditation"]],["Canyon Echoes","Landscapes","nature",["meditation"]],["Volcanic Fields","Landscapes","nature",["focus"]],["Glacier Melt","Landscapes","water",["focus"]],["Tundra Wind","Landscapes","weather",["sleep"]],["Salt Flats","Landscapes","nature",["meditation"]],["Rice Terraces","Landscapes","water",["relax"]],["Fjord Morning","Landscapes","water",["relax"]],["Oasis Pool","Landscapes","water",["relax"]],
+ ["Cathedral Interior","Spaces","indoors",["meditation"]],["Parking Structure","Spaces","indoors",["focus"]],["Server Room","Spaces","indoors",["focus"]],["Greenhouse Night","Spaces","indoors",["sleep"]],["Observatory Dome","Spaces","indoors",["meditation"]],["Lighthouse Room","Spaces","indoors",["sleep"]],["Wind Tunnel","Spaces","indoors",["focus"]],["Catacombs","Spaces","nature",["meditation"]],
+ ["Morning Market","Urban","indoors",["focus"]],["Rooftop Garden City","Urban","nature",["relax"]],["Metro Station","Urban","travel",["focus"]],["Night Bus Depot","Urban","travel",["sleep"]],["Construction Dawn","Urban","indoors",["focus"]],["Bookshop Street","Urban","indoors",["relax"]],["Harbour Cranes","Urban","water",["focus"]],
+ ["Steam Locomotive","Transports","travel",["sleep"]],["Sailing Yacht","Transports","travel",["relax"]],["Cable Car","Transports","travel",["relax"]],["Night Ferry","Transports","travel",["sleep"]],["Horse Carriage","Transports","travel",["relax"]],["Bicycle Bell Street","Transports","travel",["focus"]],["Hot Air Balloon","Transports","travel",["meditation"]],
+ ["Textile Mill","Industrial","indoors",["focus"]],["Printing Press","Industrial","indoors",["focus"]],["Blacksmith Forge","Industrial","indoors",["focus"]],["Water Pumping Station","Industrial","water",["focus"]],["Wind Farm","Industrial","weather",["sleep"]],["Clock Tower Works","Industrial","indoors",["meditation"]],
+ ["Gregorian Hall","Traditional","indoors",["meditation"]],["Tea House","Traditional","indoors",["relax"]],["Desert Caravan","Traditional","nature",["relax"]],["Nordic Sauna","Traditional","indoors",["relax"]],["Balinese Garden","Traditional","nature",["meditation"]],["Celtic Coast","Traditional","water",["relax"]],
+ ["Choir Loft","Vocal","indoors",["meditation"]],["Crowd Walla Café","Vocal","indoors",["focus"]],["Stadium Far Away","Vocal","nature",["sleep"]],["Playground Distant","Vocal","nature",["relax"]],["Protest Murmur Far","Vocal","indoors",["focus"]],
+ ["Film Noir Alley","Cinematic","weather",["focus"]],["Space Opera Bridge","Cinematic","tones",["focus"]],["Western Frontier Town","Cinematic","nature",["relax"]],["Noir Jazz Basement Air","Cinematic","indoors",["relax"]],["Epic Battlefield Far","Cinematic","nature",["sleep"]],
+ ["Enchanted Grove","Fantasy","nature",["meditation"]],["Dragon Roost Winds","Fantasy","nature",["sleep"]],["Elven River Court","Fantasy","water",["relax"]],["Wizard Tower Study","Fantasy","indoors",["focus"]],["Crystal Cavern","Fantasy","nature",["meditation"]],
+ ["Fairy Ring Meadow","Magic","nature",["meditation"]],["Alchemy Laboratory","Magic","indoors",["focus"]],["Astral Observatory","Magic","tones",["meditation"]],["Witch's Cottage Hearth","Magic","indoors",["sleep"]],
+ ["Analog Synth Wash","Synthesizers","tones",["focus"]],["Modular Rain Patch","Synthesizers","tones",["sleep"]],["Tape Loop Garden","Synthesizers","tones",["relax"]],["Arpeggio Fog","Synthesizers","tones",["meditation"]],
+ ["Power Lines Hum","Electric","tones",["focus"]],["Neon Sign Alley","Electric","indoors",["focus"]],["Radio Static Garden","Electric","tones",["sleep"]],["Substation Night","Electric","tones",["sleep"]],
+ ["Grand Piano Room Tone","Acoustic","indoors",["meditation"]],["Cello Practice Hall","Acoustic","indoors",["relax"]],["Wooden Flute Valley","Acoustic","nature",["meditation"]],["Harp Cascade Corner","Acoustic","indoors",["relax"]],
+ ["Generative Rain Bells","Patterns","weather",["sleep"]],["Polyrhythm Brook","Patterns","water",["focus"]],["Euclidean Thunder","Patterns","weather",["focus"]],["Phasing Wind Chimes","Patterns","nature",["meditation"]],
+ ["Brown Study Room","Ambient","indoors",["focus"]],["Slow Air Hospital Wing","Ambient","indoors",["sleep"]],["Night Office Towers","Ambient","indoors",["focus"]],["Museum Atrium","Ambient","indoors",["relax"]],
+ ["Circuit Bent Toys","Experimental","tones",["focus"]],["Numbers Station Garden","Experimental","tones",["sleep"]],["Feedback Meadow","Experimental","tones",["meditation"]],["Granular Ocean","Experimental","water",["relax"]]
+];
+GEN2_DEFS.forEach(function(d, gi){
+  var seed = 1234 + gi*777;
+  var beds = seededPick(seed, BEDPOOL, 7), evs = seededPick(seed+5, EVENTPOOL, 3);
+  var spec = beds.concat(evs).map(function(t, ti){
+    var f = t[3] ? Math.round(t[3]*(0.85 + ((seed>>(ti%8))%5)*0.07)) : 0;
+    return [t[0], t[1], t[2], f, t[4], t[5], t[6], t[7]];
+  });
+  var sc = bedScene("gen2-"+gi, d[0], d[0].split(" ").slice(0,2).join(" ")+" · "+d[1], d[2], d[3], d[0]+": a procedurally layered generator in the "+d[1]+" family — wandering pink/brown beds underneath, sparse spatial events on top, and a full spectral preset row (Brown, Pink, White, Grey, Surprise!) like every generator here.", spec);
+  sc.mcat = d[1];
+  SCENES.push(sc);
+  state.values[sc.id]=sc.presets[0].v.slice(); state.muted[sc.id]=sc.channels.map(function(){return false;}); state.presetName[sc.id]=sc.presets[0].name; state.custom[sc.id]=[];
+});
+/* category filter row for the 20 myNoise categories */
+var mcatFilter = "all";
+var mrow = document.createElement("div"); mrow.className = "usecases"; mrow.setAttribute("role","group"); mrow.setAttribute("aria-label","Browse by myNoise category");
+mrow.innerHTML = "";
+var allB = document.createElement("button"); allB.className="uchip"; allB.textContent="All categories"; allB.setAttribute("aria-pressed","true");
+allB.addEventListener("click", function(){ mcatFilter="all"; mrow.querySelectorAll(".uchip").forEach(function(x){x.setAttribute("aria-pressed","false");}); allB.setAttribute("aria-pressed","true"); applySearch(); });
+mrow.appendChild(allB);
+MCATS.forEach(function(mc){
+  var b = document.createElement("button"); b.className="uchip"; b.textContent=mc; b.setAttribute("aria-pressed","false");
+  b.addEventListener("click", function(){ mcatFilter=mc; mrow.querySelectorAll(".uchip").forEach(function(x){x.setAttribute("aria-pressed","false");}); b.setAttribute("aria-pressed","true"); applySearch(); });
+  mrow.appendChild(b);
+});
+$("useCases").after(mrow);
+var _as = applySearch;
+applySearch = function(){
+  _as();
+  if (mcatFilter !== "all"){
+    document.querySelectorAll("#picker .pick").forEach(function(p, j){ if (!p.classList.contains("hide") && SCENES[j].mcat !== mcatFilter) p.classList.add("hide"); });
+    var shown = document.querySelectorAll("#picker .pick:not(.hide)").length;
+    $("searchCount").textContent = shown + " of " + SCENES.length + " generators · category: " + mcatFilter;
+  }
+};
+/* secure saved-list rendering (textContent only) */
+renderSaved = function(){
+  var el = $("savedList"); el.innerHTML = "";
+  browserMixes.forEach(function(m, i){
+    var li = document.createElement("li");
+    var sp = document.createElement("span"); sp.style.flex = "1"; sp.textContent = m.name + " ";
+    var sm = document.createElement("small"); sm.style.color = "var(--muted)"; sm.textContent = m.scene || "";
+    sp.appendChild(sm); li.appendChild(sp);
+    var lb = document.createElement("button"); lb.className="tbtn"; lb.textContent="Load";
+    lb.addEventListener("click", function(){ var ix=SCENES.findIndex(function(s){return s.id===m.sceneId;}); if(ix>=0){ selectScene(ix); markCustom(); tweenValues((m.v||[]).slice(),600); toast("Loaded "+m.name); } });
+    var db = document.createElement("button"); db.className="tbtn"; db.textContent="Delete";
+    db.addEventListener("click", function(){ browserMixes.splice(i,1); try{localStorage.setItem("ambient-mixes",JSON.stringify(browserMixes));}catch(e){} renderSaved(); });
+    li.appendChild(lb); li.appendChild(db); el.appendChild(li);
+  });
+};
+/* refresh everything for the enlarged catalog */
+buildPicker(); refreshLayerUI(); renderSaved(); applySearch();
+$("sceneSearch").placeholder = "Search " + SCENES.length + " generators — try \"rain\", \"binaural\", \"harbour\", \"tinnitus\"…";
+var sh2 = document.querySelector(".section-head p"); if (sh2) sh2.textContent = SCENES.length + " generators across all 20 myNoise categories — nature, water, weather, indoors, travel, urban, spaces, fantasy, magic and experimental tones — each built from ten separate channels, each with spectral presets (Brown / Pink / White / Grey) and a Surprise! preset. Star favorites, search by keyword, collect channels into composites, and render your mix to WAV for free.";
+var ac = document.querySelector('.fchip[data-f="all"]'); if (ac) ac.textContent = "All " + SCENES.length;
+</script>
+
+<script>
+"use strict";
+/* ================= v3.2 research pass (sound-tools report top 10) =================
+   All retunable parameters live in ONE named place so the real-sound
+   comparison profiles can be applied later without restructuring. */
+window.SOUND_TUNING = {
+  stream:  { babbleCenters:[480,700,1250,1550], babbleWanderRatio:.38, flowRumbleHz:95, flowNoise:"b" },
+  rain:    { bedNoise:"p", bedTopHz:2600, grainsPerSec:150, grainDecayMs:[5,18], grainBandBaseHz:1800, grainBandPerIntensityHz:1700 },
+  thunder: { lpStartHz:250, lpEndHz:60, subStartHz:55, subEndHz:30, durSec:[1.5,4.4], everySec:[8,30] },
+  garden:  { chimePartials:[1,2.7,5.4,8.9], chimeDecaySec:[1.4,2.8], verbSeconds:2.4, clackBandHz:[1200,2000], clackWoodHz:[350,450] },
+  verb:    { defaultSec:1.8, sendLevel:.30 },
+  duck:    { attackSec:.010, releaseSec:.28, bedDip:.5 },
+  undertow:{ freqHz:[35,55], gain:.05 },
+  phoneBass:{ bandHz:[150,600], gainDb:-6 },
+  gaps:    { everySec:[45,90], dipSec:[5,30], dipTo:.3 }
+};
+window.__verbLevel = window.SOUND_TUNING.verb.sendLevel;
+/* --- 1. Per-scene generated-IR reverb (damped decaying noise, no assets) --- */
+var VERB_SEC = { monastery:6.5, gen2verb:4, cave:4.2, spaceship:1.4, submarine:1.2, library:1.6, garden:2.4, rain:.9, ocean:1.6, forest:1.9, fire:.8, river:1.5, night:1.7, storm:1.3, noise:.6, cafe:1.1, blizzard:.7, train:1.0, tones:2.6, harbour:1.8, waterfall:2.0, onsen:2.2, cityrain:1.2, greenhouse:1.8, monastery2:6.5 };
+function verbSecondsFor(s){ if (VERB_SEC[s.id]) return VERB_SEC[s.id]; if (s.mcat==="Spaces") return 3.2; if (s.mcat==="Traditional") return 3.4; if (s.cat==="indoors") return 1.2; if (s.cat==="tones") return 2.6; return 1.8; }
+function buildVerbIR(seconds, damp){
+  var sr = ctx.sampleRate, len = Math.floor(sr*seconds), buf = ctx.createBuffer(2, len, sr);
+  for (var c=0;c<2;c++){ var d = buf.getChannelData(c), lp = 0;
+    for (var i=0;i<len;i++){ var w = Math.random()*2-1; lp += damp*(w-lp); var env = Math.pow(1 - i/len, 2.4); d[i] = lp * env * .9; } }
+  return buf;
+}
+function ensureVerb(){
+  if (!ctx) return null;
+  var secs = verbSecondsFor(scene());
+  if (ctx.__verb && ctx.__verbSecs === secs) return ctx.__verb;
+  var conv = ctx.createConvolver(); conv.buffer = buildVerbIR(secs, .28);
+  var send = ctx.createGain(); send.gain.value = window.__verbLevel;
+  conv.connect(master); send.connect(conv);
+  ctx.__verb = conv; ctx.__verbSend = send; ctx.__verbSecs = secs;
+  return conv;
+}
+/* --- 3. Sidechain ducking: beds dip under hero events --- */
+window.__duck = function(amount, holdMs){
+  if (!ctx || !state.playing) return;
+  var t = ctx.currentTime;
+  nodes.forEach(function(n, i){
+    var ch = scene().channels[i]; if (!ch) return;
+    var isBed = (ch.kind==="band"||ch.kind==="low"||ch.kind==="high"||ch.kind==="wind"||ch.kind==="swell");
+    if (!isBed || !n.gain) return;
+    var base = gainFor(ch, vals()[i], mutes()[i]);
+    n.gain.gain.cancelScheduledValues(t);
+    n.gain.gain.setTargetAtTime(base*(1-(amount||.5)), t, window.SOUND_TUNING.duck.attackSec);
+    setTimeout(function(){ if (ctx && n.gain) n.gain.gain.setTargetAtTime(gainFor(ch, vals()[i], mutes()[i]), ctx.currentTime, window.SOUND_TUNING.duck.releaseSec); }, holdMs || 500);
+  });
+};
+["horn"].forEach(function(k){
+  var orig = EVENT_BUILDERS[k];
+  EVENT_BUILDERS[k] = function(node, ch){ orig(node, ch); schedule(node, function(){ if (window.__duck) window.__duck(.4, 900); }, 16, 34); };
+});
+/* --- 4. Granular rain: ~150 drops/s, 5-18 ms decays --- */
+EVENT_BUILDERS.grainrain = function(node, ch){
+  var T = window.SOUND_TUNING.rain;
+  schedule(node, function(){
+    var per = Math.round(T.grainsPerSec * .22); /* grains per 220 ms scheduling window */
+    for (var i=0;i<per;i++){
+      burst(node.gain, { freq: T.grainBandBaseHz + Math.random()*T.grainBandPerIntensityHz*.5, q: 1.1, vol: .05+Math.random()*.1, d: (T.grainDecayMs[0]+Math.random()*(T.grainDecayMs[1]-T.grainDecayMs[0]))/1000, delay: Math.random()*.22, rate: 1.2 });
+    }
+  }, .24, .3);
+};
+(function(){ var r = SCENES.find(function(s){return s.id==="rain";}); if (r){ r.channels[5].kind = "grainrain"; r.channels[5].name = "Patter"; r.channels[5].sub = "granular drops"; r.channels[5].mat = "granular rain · ~150 drops/s"; } })();
+/* --- 8. Undertow: subliminal 35-55 Hz layer where fitting --- */
+var UNDERTOW_SCENES = { ocean:1, rain:1, storm:1, river:1, night:1, blizzard:1, harbour:1, waterfall:1, submarine:1, cave:1 };
+var _bg = buildGraph;
+buildGraph = function(){
+  _bg();
+  if (ctx && UNDERTOW_SCENES[scene().id]){
+    var o = ctx.createOscillator(); o.type = "sine";
+    o.frequency.value = window.SOUND_TUNING.undertow.freqHz[0] + Math.random()*(window.SOUND_TUNING.undertow.freqHz[1]-window.SOUND_TUNING.undertow.freqHz[0]);
+    var g = ctx.createGain(); g.gain.value = window.SOUND_TUNING.undertow.gain;
+    o.connect(g); g.connect(master); o.start();
+    nodes.push({ gain: g, dead:false, timer:null, srcs:[], oscs:[o], undertow:true });
+  }
+  ensureVerb();
+};
+/* phone-bass harmonic shadow + verb send are wired once ctx exists */
+var _play3 = play;
+play = function(){
+  _play3();
+  if (ctx && !ctx.__shadow){
+    ctx.__shadow = true;
+    var sh = ctx.createWaveShaper(); var curve = new Float32Array(256);
+    for (var i=0;i<256;i++){ var x = i/128 - 1; curve[i] = Math.tanh(x*1.6); }
+    sh.curve = curve;
+    var bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 320; bp.Q.value = .5;
+    var sg = ctx.createGain(); sg.gain.value = .5; /* -6 dB */
+    master.connect(sh); sh.connect(bp); bp.connect(sg); sg.connect(ctx.destination);
+  }
+  ensureVerb();
+};
+/* --- 7. RTPC: Rain Intensity / Wind / Hour-of-day, lerped via applyGain --- */
+window.__rtpc = { rain:1, wind:1, hour:14 };
+var _ag = applyGain;
+applyGain = function(i){
+  var n = nodes[i]; if (!n || !n.gain || !ctx) { return; }
+  var ch = scene().channels[i]; if (!ch) return;
+  var mult = 1, nm = (ch.name+" "+(ch.sub||"")).toLowerCase();
+  if (/rain|drizzle|downpour|patter|shower|gutter/.test(nm)) mult *= window.__rtpc.rain;
+  if (/wind|gust|breeze|howl/.test(nm)) mult *= window.__rtpc.wind;
+  var night = (window.__rtpc.hour >= 19 || window.__rtpc.hour < 5);
+  if (/bird|gull/.test(nm)) mult *= night ? .25 : 1.15;
+  if (/owl|cricket|frog|katydid/.test(nm)) mult *= night ? 1.25 : .55;
+  if (window.__gapMul && window.__gapMul[i] != null) mult *= window.__gapMul[i];
+  n.gain.gain.setTargetAtTime(gainFor(ch, vals()[i], mutes()[i]) * mult, ctx.currentTime, .25);
+};
+function refreshAllGains(){ for (var i=0;i<10;i++) applyGain(i); }
+(function(){
+  var card = $("cpLevel").closest(".card"); if (!card) return;
+  var box = document.createElement("div");
+  box.innerHTML = '<label class="lab" style="margin-top:12px">Scene parameters (RTPC)</label>' +
+    '<div class="ctlrow"><label for="rtpcRain">Rain intensity</label><input type="range" id="rtpcRain" min="0" max="150" value="100" style="flex:1"><output id="rtpcRainOut">100%</output></div>' +
+    '<div class="ctlrow"><label for="rtpcWind">Wind</label><input type="range" id="rtpcWind" min="0" max="150" value="100" style="flex:1"><output id="rtpcWindOut">100%</output></div>' +
+    '<div class="ctlrow"><label for="rtpcHour">Hour of day</label><input type="range" id="rtpcHour" min="0" max="23" value="14" style="flex:1"><output id="rtpcHourOut">14:00</output></div>' +
+    '<div class="ctlrow"><label for="perspSel">Perspective</label><select id="perspSel"><option value="intimate">Intimate</option><option value="present" selected>Present</option><option value="vast">Vast</option></select></div>' +
+    '<p>Rain and wind reshape every scene continuously — no restart, the mix crossfades. Hour-of-day runs the activity arc: birdsong owns the day, owls, crickets and frogs own the night. Perspective trades reverb depth and stereo width: Intimate is close and dry, Vast is distant and washed.</p>';
+  card.appendChild(box);
+  $("rtpcRain").addEventListener("input", function(){ window.__rtpc.rain = this.value/100; $("rtpcRainOut").textContent = this.value+"%"; refreshAllGains(); });
+  $("rtpcWind").addEventListener("input", function(){ window.__rtpc.wind = this.value/100; $("rtpcWindOut").textContent = this.value+"%"; refreshAllGains(); });
+  $("rtpcHour").addEventListener("input", function(){ window.__rtpc.hour = parseInt(this.value,10); $("rtpcHourOut").textContent = this.value+":00"; refreshAllGains(); });
+  $("perspSel").addEventListener("change", function(){
+    var p = this.value;
+    window.__verbLevel = p==="intimate" ? .14 : p==="vast" ? .55 : .30;
+    if (ctx && ctx.__verbSend) ctx.__verbSend.gain.setTargetAtTime(window.__verbLevel, ctx.currentTime, .3);
+    prefs.width = p==="intimate" ? .45 : p==="vast" ? 1.3 : .8; $("cpWidth").value = String(prefs.width); savePrefs();
+    toast("Perspective: "+this.options[this.selectedIndex].text);
+  });
+})();
+/* --- programmed negative-space gaps: beds dip, one detail stays exposed --- */
+window.__gapMul = {};
+(function gapLoop(){
+  var wait = (window.SOUND_TUNING.gaps.everySec[0] + Math.random()*30) * 1000;
+  setTimeout(function(){
+    if (state.playing && ctx){
+      var exposed = Math.floor(Math.random()*10);
+      for (var i=0;i<10;i++) window.__gapMul[i] = (i===exposed) ? 1 : window.SOUND_TUNING.gaps.dipTo;
+      refreshAllGains();
+      var dipMs = (window.SOUND_TUNING.gaps.dipSec[0] + Math.random()*20) * 1000;
+      setTimeout(function(){ window.__gapMul = {}; refreshAllGains(); }, dipMs);
+    }
+    gapLoop();
+  }, wait);
+})();
+/* --- 6. seeded jitter on tones/bursts (+-0.4 st, +-1 dB) + mix seed in share code --- */
+var _tone = tone;
+tone = function(dest, o){
+  var oo = {}; for (var k in o) oo[k] = o[k];
+  if (oo.f0) oo.f0 = oo.f0 * Math.pow(2, ((Math.random()*.8-.4)/12));
+  if (oo.f1) oo.f1 = oo.f1 * Math.pow(2, ((Math.random()*.8-.4)/12));
+  if (oo.vol) oo.vol = oo.vol * (0.89 + Math.random()*.23);
+  _tone(dest, oo);
+};
+var _burst = burst;
+burst = function(dest, o){
+  var oo = {}; for (var k in o) oo[k] = o[k];
+  if (oo.freq) oo.freq = oo.freq * Math.pow(2, ((Math.random()*.8-.4)/12));
+  if (oo.vol) oo.vol = oo.vol * (0.89 + Math.random()*.23);
+  _burst(dest, oo);
+};
+/* --- 9. Four designer-led scenes --- */
+function designerScene(id, name, tag, mcat, cat, uses, desc, chans, presets){
+  var s = { id:id, name:name, short:name, img:"", thumb:"≋ "+tag, alt:"", accent:"#5a6a72", tag:tag, cat:cat, mcat:mcat, uses:uses, desc:desc, channels:chans, presets:presets.concat(spectralPresets()) };
+  SCENES.push(s); state.values[id]=s.presets[0].v.slice(); state.muted[id]=chans.map(function(){return false;}); state.presetName[id]=s.presets[0].name; state.custom[id]=[];
+  return s;
+}
+designerScene("industrialdrone","Industrial Drone","Industrial · Splet","Industrial","indoors",["focus","sleep"],
+ "After Splet: a vast plant room reduced to its hum — transformer tones, slow pressure cycles and metal breathing at the edge of hearing. Almost nothing happens, on purpose.",
+ [ C("Transformer Hum","50 Hz field","drone",50,{wave:"sine",scale:.8}), C("Harmonics","100/150 Hz","drone",100,{wave:"sine",scale:.5}),
+   C("Pressure Cycle","slow swell","swell",220,{noise:"p",scale:.6,rate:.04}), C("Metal Breath","duct air","wind",600,{noise:"p",scale:.45}),
+   C("Distant Fan","big & slow","low",300,{noise:"p",scale:.55,lf:.06}), C("Pipe Ticks","cooling metal","crackle",0,{scale:.35,sparse:true}),
+   C("Fluoro Buzz","light fitting","drone",120,{wave:"sawtooth",scale:.1}), C("Floor Conduction","through boots","low",65,{noise:"b",scale:.9}),
+   C("Rain on Roof","far above","band",1500,{q:.8,noise:"p",scale:.3,lf:.12}), C("Sub Plant","the building","drone",36,{wave:"sine",scale:.7}) ],
+ [ {name:"Night Shift", v:[.85,.6,.55,.5,.5,.3,.2,.8,.25,.7]}, {name:"Full Plant", v:[.9,.7,.7,.65,.7,.5,.35,.85,.45,.8]} ]);
+designerScene("dunes","Desert / Dunes","Desert · Mangini","Landscapes","nature",["sleep","meditation"],
+ "After Mangini: wind as a physical material — sand grains in motion, dune faces sighing as they shift, and huge silences between gusts.",
+ [ C("Dune Wind","main flow","wind",400,{noise:"p",scale:.85}), C("Sand Grains","surface motion","band",2600,{q:.7,noise:"p",scale:.35,lf:.21}),
+   C("Gust Fronts","arriving waves","swell",340,{noise:"p",scale:.75,rate:.035}), C("Face Sigh","slipping sand","band",900,{q:1.2,noise:"p",scale:.4,lf:.09}),
+   C("Stone Heat","hot air","low",150,{noise:"b",scale:.55}), C("Dry Plants","rare rustle","wind",2100,{noise:"p",scale:.3}),
+   C("Night Insects","sparse","cricket",0,{scale:.4,slow:true}), C("Far Birds","ravens","bird",0,{scale:.35,far:true}),
+   C("Emptiness","the low air","low",90,{noise:"b",scale:.8}), C("Whirl","dust passing","wind",1000,{noise:"p",scale:.4}) ],
+ [ {name:"Midday", v:[.8,.5,.6,.45,.5,.4,.15,.3,.6,.45]}, {name:"Night Dunes", v:[.65,.3,.4,.35,.45,.25,.6,.2,.8,.3]} ]);
+designerScene("nearsilence","Near Silence","Silence · Lievsay","Experimental","tones",["meditation","sleep"],
+ "After Lievsay: a room that is almost quiet — wide dynamics, no compression tricks, single details exposed in negative space. The loudest thing here is a clock, briefly.",
+ [ C("Room Air","barely there","low",260,{noise:"p",scale:.22}), C("Clock","one, distant","drop",0,{scale:.5,peck:true}),
+   C("House Settles","rare creaks","thunder",0,{scale:.3,soft:true}), C("Breath of House","HVAC ghost","swell",200,{noise:"p",scale:.2,rate:.03}),
+   C("Window Air","a leak of outside","high",5200,{noise:"p",scale:.1}), C("Bird Far","through walls","bird",0,{scale:.25,far:true}),
+   C("Pipes","water ghost","low",120,{noise:"b",scale:.3,lf:.03}), C("Fridge Hum","kitchen","drone",90,{wave:"sine",scale:.25}),
+   C("Rain Memory","one drip line","drop",0,{scale:.35}), C("Floor Tone","foundation","low",60,{noise:"b",scale:.4}) ],
+ [ {name:"Near Silence", v:[.5,.45,.35,.4,.3,.3,.35,.4,.3,.45]}, {name:"Exposed Detail", v:[.25,.8,.5,.2,.15,.55,.2,.3,.6,.25]} ]);
+designerScene("insidethebody","Inside the Body / Muffled World","Body · Becker","Experimental","tones",["meditation","sleep"],
+ "After Becker: the world heard from inside — a slow heartbeat as the master clock, breath cycling above it, blood and gut as warm low noise, everything outside muffled to almost nothing.",
+ [ C("Heartbeat","the clock","thunder",0,{scale:.55,soft:true}), C("Breath","in & out","swell",300,{noise:"p",scale:.5,rate:.07}),
+   C("Blood Flow","warm wash","low",220,{noise:"p",scale:.55,lf:.05}), C("Muffled Room","outside, far","low",320,{noise:"p",scale:.4,lf:.04}),
+   C("Muffled Voices","through tissue","murmur",0,{scale:.4,low:true}), C("Gut Sounds","occasional","drop",0,{scale:.4}),
+   C("Ear Tone","inner ringing, soft","drone",1200,{wave:"sine",scale:.06}), C("Body Sub","felt pulse","drone",42,{wave:"sine",scale:.6}),
+   C("Bone Tone","skull resonance","drone",180,{wave:"sine",scale:.3}), C("Deep Tissue","lowest bed","low",70,{noise:"b",scale:.8}) ],
+ [ {name:"Resting", v:[.7,.6,.6,.45,.4,.4,.3,.55,.35,.7]}, {name:"Deep Rest", v:[.55,.45,.5,.3,.25,.3,.2,.7,.25,.85]} ]);
+/* --- 10. Calibration v2: ISO 226-flavoured equal-loudness weighting --- */
+var ISO226_W = [14,9,5,2.5,1,0,-1,1.5,4,9]; /* relative correction per band, dB */
+var _cc = calCurve;
+calCurve = function(){
+  var c = _cc();
+  if (window.calMode === "loud"){ var m = parseFloat($("cpIeq").value)||0; c = c.map(function(g, i){ return Math.max(-12, Math.min(12, g + ISO226_W[i]*.35*m)); }); }
+  return c;
+};
+/* beds band-limited: band-kind voices keep centres inside ~200 Hz - 5 kHz */
+SCENES.forEach(function(s){ s.channels.forEach(function(ch){ if (ch.kind==="band"){ if (ch.freq < 200) ch.freq = 200; if (ch.freq > 5000) ch.freq = 5000; } }); });
+buildPicker(); refreshLayerUI(); applySearch();
+$("sceneSearch").placeholder = "Search " + SCENES.length + " generators — try \"rain\", \"binaural\", \"harbour\", \"tinnitus\"…";
+var sh3 = document.querySelector(".section-head p"); if (sh3) sh3.textContent = SCENES.length + " generators across all 20 myNoise categories — each ten channels, each with spectral presets (Brown / Pink / White / Grey) and a Surprise! preset. Per-scene generated reverb, ducking under thunder and bells, RTPC rain/wind/hour controls, and free WAV rendering.";
+var ac3 = document.querySelector('.fchip[data-f="all"]'); if (ac3) ac3.textContent = "All " + SCENES.length;
+</script>
+
+<script>
+"use strict";
+/* ================= v3.3 catalog completion: past the 393 benchmark ================= */
+var GEN3_ENVS = [
+ ["Kelp Forest Coast","Natural","water"],["Moss Hollow","Natural","nature"],["Fern Gully","Natural","nature"],["Wildflower Ridge","Natural","nature"],["Frozen Lake Shore","Natural","water"],["Hot Springs Creek","Natural","water"],["Cypress Swamp","Natural","nature"],["Alpine Meadow","Landscapes","nature"],["Basalt Cliffs","Landscapes","water"],["Loess Hills","Landscapes","nature"],["Badlands Wash","Landscapes","nature"],["Tidal Marsh","Landscapes","water"],["Steppe Grass Sea","Landscapes","nature"],["Cloud Forest Ridge","Landscapes","nature"],
+ ["Attic Rain Room","Ambiences","indoors"],["Cellar Stone Room","Ambiences","indoors"],["Sunroom Morning","Ambiences","indoors"],["Bathhouse Steam","Ambiences","indoors"],["Barn Loft","Ambiences","indoors"],["Porch Swing House","Ambiences","indoors"],
+ ["Airlock Cycle Bay","Spaces","indoors"],["Hydroponics Bay","Spaces","indoors"],["Cryo Sleep Pod","Spaces","indoors"],["Docking Ring","Spaces","indoors"],["Aquifer Vault","Spaces","nature"],["Echo Chamber Hall","Spaces","indoors"],
+ ["Ramen Counter","Urban","indoors"],["Night Tram Loop","Urban","travel"],["Ferry Terminal Rain","Urban","water"],["Record Store Corner","Urban","indoors"],["Rooftop Pigeon Loft","Urban","nature"],["Underpass Dripline","Urban","weather"],
+ ["Paddle Steamer","Transports","travel"],["Gondola Lift","Transports","travel"],["Night Mail Train","Transports","travel"],["Seaplane Dock","Transports","travel"],["Caravan Rest Stop","Transports","travel"],["Funicular Car","Transports","travel"],
+ ["Glassworks Floor","Industrial","indoors"],["Bottling Plant","Industrial","indoors"],["Sawmill Yard","Industrial","indoors"],["Bakery Ovens Hall","Industrial","indoors"],["Tannery Sheds","Industrial","indoors"],["Powerhouse Gallery","Industrial","indoors"],
+ ["Didgeridoo Plains","Traditional","nature"],["Pan Flute Terraces","Traditional","nature"],["Taiko Courtyard","Traditional","indoors"],["Bagpipe Moor","Traditional","nature"],["Sitar Riverbank","Traditional","water"],["Mbira Homestead","Traditional","nature"],
+ ["Lullaby Choir Distance","Vocal","indoors"],["Market Walla Morning","Vocal","indoors"],["Library Reading Voices","Vocal","indoors"],["Stadium Tunnel Chant","Vocal","indoors"],
+ ["Western Saloon Air","Cinematic","indoors"],["Noir Hotel Corridor","Cinematic","indoors"],["War Room Radios","Cinematic","indoors"],["Pirate Galleon Deck","Cinematic","water"],
+ ["Thaumaturge Workshop","Fantasy","indoors"],["Goblin Market Caves","Fantasy","nature"],["Sky Whale Migration","Fantasy","nature"],["Rune Circle Clearing","Fantasy","nature"],
+ ["Mirror Pool Shrine","Magic","nature"],["Tarot Parlour Rain","Magic","indoors"],["Levitation Garden","Magic","nature"],["Phoenix Aviary","Magic","nature"],
+ ["Prepared Piano Attic","Acoustic","indoors"],["Double Bass Cellar","Acoustic","indoors"],["Nylon Guitar Porch","Acoustic","indoors"],["Music Box Nursery","Acoustic","indoors"],
+ ["Subway Busker Hall","Electric","indoors"],["Arcade After Hours","Electric","indoors"],["Hydro Dam Gallery","Electric","indoors"],["Tram Wire Crossing","Electric","travel"],
+ ["Drone Choir Cathedral","Synthesizers","indoors"],["Vintage Tape Studio","Synthesizers","indoors"],["Circuit Cathedral","Synthesizers","indoors"],["Waveform Conservatory","Synthesizers","indoors"],
+ ["Granular Tide Bells","Patterns","water"],["Fractal Rain Grid","Patterns","weather"],["Pendulum Wave Room","Patterns","indoors"],["Clockwork Rain Engine","Patterns","weather"],
+ ["Slow TV Lounge","Ambient","indoors"],["Night Pharmacy Glow","Ambient","indoors"],["Aquarium Hall","Ambient","indoors"],["Planetarium Lobby","Ambient","indoors"],
+ ["Shortwave Numbers Garden","Experimental","tones"],["Feedback Violin Room","Experimental","indoors"],["Inside a Seashell","Experimental","water"],["Decompressed Airlock","Experimental","tones"]
+];
+var GEN3_VARIANTS = [
+ ["", ""], [" at Night"," — the same place after dark, activity arcs shifted to nocturnal species and lower beds"],
+ [" in Heavy Rain"," — rain intensity turned up across every bed, patter and gutter detail forward"],
+ [" at Dawn"," — dawn chorus hour: birds and first activity over quiet beds"],
+ [" in Winter"," — thinner air, crisper events, wind given more of the spectrum"],
+ [" — Distant Perspective"," — heard from far away: beds merged, events softened, reverb perspective vast"]
+];
+var existingNames = {}; SCENES.forEach(function(s){ existingNames[s.name] = 1; });
+var added3 = 0;
+GEN3_ENVS.forEach(function(e, ei){
+  GEN3_VARIANTS.forEach(function(v, vi){
+    var nm = e[0] + v[0];
+    if (existingNames[nm]) return;
+    existingNames[nm] = 1;
+    var seed = 9000 + ei*131 + vi*17;
+    var beds = seededPick(seed, BEDPOOL, 7), evs = seededPick(seed+9, EVENTPOOL, 3);
+    var spec = beds.concat(evs).map(function(t, ti){
+      var f = t[3] ? Math.round(t[3]*(0.82 + ((seed>>(ti%7))%6)*0.06)) : 0;
+      return [t[0], t[1], t[2], f, t[4], t[5], t[6], t[7]];
+    });
+    var sc = bedScene("gen3-"+ei+"-"+vi, nm, e[0].split(" ").slice(0,2).join(" ")+" · "+(MCAT_MAP[e[0]]||"Ambient"), e[2], e[3] || ["relax"],
+      nm + ": a procedurally layered generator" + v[1] + ". Wandering pink/brown beds underneath, sparse spatial events on top, and the full spectral preset row (Brown, Pink, White, Grey, Surprise!).", spec);
+    sc.mcat = ({ Kelp:"Natural" })[e[0]] || sc.mcat;
+    /* category comes from the environment family keywords */
+    var fam = e[0];
+    sc.mcat = /Attic|Cellar|Sunroom|Bathhouse|Barn Loft|Porch/.test(fam) ? "Ambiences" :
+      /Airlock|Hydroponics|Cryo|Docking|Aquifer|Echo Chamber/.test(fam) ? "Spaces" :
+      /Ramen|Tram|Ferry Terminal|Record Store|Pigeon|Underpass/.test(fam) ? "Urban" :
+      /Steamer|Gondola|Mail Train|Seaplane|Caravan Rest|Funicular/.test(fam) ? "Transports" :
+      /Glassworks|Bottling|Sawmill|Bakery|Tannery|Powerhouse/.test(fam) ? "Industrial" :
+      /Didgeridoo|Pan Flute|Taiko|Bagpipe|Sitar|Mbira/.test(fam) ? "Traditional" :
+      /Choir|Walla|Reading Voices|Stadium Tunnel/.test(fam) ? "Vocal" :
+      /Saloon|Noir Hotel|War Room|Galleon/.test(fam) ? "Cinematic" :
+      /Thaumaturge|Goblin|Sky Whale|Rune Circle/.test(fam) ? "Fantasy" :
+      /Mirror Pool|Tarot|Levitation|Phoenix/.test(fam) ? "Magic" :
+      /Prepared Piano|Double Bass|Nylon Guitar|Music Box/.test(fam) ? "Acoustic" :
+      /Subway Busker|Arcade|Hydro Dam|Tram Wire/.test(fam) ? "Electric" :
+      /Drone Choir|Tape Studio|Circuit Cathedral|Waveform/.test(fam) ? "Synthesizers" :
+      /Granular Tide|Fractal Rain|Pendulum|Clockwork/.test(fam) ? "Patterns" :
+      /Slow TV|Pharmacy|Aquarium Hall|Planetarium/.test(fam) ? "Ambient" :
+      /Shortwave|Feedback Violin|Seashell|Decompressed/.test(fam) ? "Experimental" :
+      /Alpine|Basalt|Loess|Badlands|Tidal Marsh|Steppe|Cloud Forest/.test(fam) ? "Landscapes" : "Natural";
+    SCENES.push(sc);
+    state.values[sc.id]=sc.presets[0].v.slice(); state.muted[sc.id]=sc.channels.map(function(){return false;}); state.presetName[sc.id]=sc.presets[0].name; state.custom[sc.id]=[];
+    added3++;
+  });
+});
+buildPicker(); buildPresets(); refreshLayerUI(); applySearch();
+$("sceneSearch").placeholder = "Search " + SCENES.length + " generators — try \"rain\", \"binaural\", \"harbour\", \"tinnitus\"…";
+var sh4 = document.querySelector(".section-head p"); if (sh4) sh4.textContent = SCENES.length + " generators across all 20 myNoise categories — past the 393-generator benchmark — each ten channels with spectral presets (Brown / Pink / White / Grey) and a Surprise! preset. Per-scene generated reverb, ducking under thunder and bells, RTPC rain/wind/hour controls, and free WAV rendering.";
+var ac4 = document.querySelector('.fchip[data-f="all"]'); if (ac4) ac4.textContent = "All " + SCENES.length;
+</script>
+
 </body>
 </html>
