@@ -934,7 +934,7 @@ function toast(msg){
 }
 
 /* ================= Audio engine ================= */
-var ctx = null, master = null, analyser = null, buffers = {}, nodes = [], builtFor = null, eqNodes = [], bellBus = null, bellNode = null;
+var ctx = null, master = null, analyser = null, buffers = {}, nodes = [], builtFor = null, eqNodes = [], bellBus = null, bellNode = null, binBus = null, binMerger = null;
 var masterVol = 0.8;
 
 function makeBuffers(){
@@ -1185,7 +1185,14 @@ function buildChannel(ch, i, ctxVals, ctxMutes, dest){
   var cv = ctxVals || vals(), cm = ctxMutes || mutes();
   var node = { gain: ctx.createGain(), dead:false, timer:null, srcs:[], oscs:[] };
   node.gain.gain.value = gainFor(ch, cv[i], cm[i]);
-  node.gain.connect(dest || master);
+  /* v4 W-1: a hard-panned drone in the main graph is a binaural carrier — route its gain (the per-ear gain) straight into the binaural merger, one ear only, bypassing the shared stereo path and its crossover. Layer channels (explicit dest) keep the old panner path so layer volume semantics are unchanged. */
+  var isBin = (ch.kind === "drone") && (ch.pan === -1 || ch.pan === 1) && !dest && !!binMerger;
+  if (isBin){
+    node.gain.channelCountMode = "explicit"; node.gain.channelCount = 1; node.gain.channelInterpretation = "discrete";
+    node.gain.connect(binMerger, 0, ch.pan < 0 ? 0 : 1);
+  } else {
+    node.gain.connect(dest || master);
+  }
   var kind = ch.kind;
   if (kind === "band" || kind === "low" || kind === "high" || kind === "wind" || kind === "swell"){
     var src = noiseSrc(ch.noise);
@@ -1220,7 +1227,7 @@ function buildChannel(ch, i, ctxVals, ctxMutes, dest){
     src.start(); node.srcs.push(src);
   } else if (kind === "drone"){
     var o = ctx.createOscillator(); o.type = ch.wave || "sine"; o.frequency.value = ch.freq * (window.__transpose || 1) * (window.__tuning || 1);
-    if (ch.pan && ctx.createStereoPanner){
+    if (ch.pan && !isBin && ctx.createStereoPanner){
       var pn = ctx.createStereoPanner(); pn.pan.value = ch.pan;
       o.connect(pn); pn.connect(node.gain);
     } else o.connect(node.gain);
@@ -1372,20 +1379,29 @@ function ensureCtx(){
   });
   master.connect(eqNodes[0]);
   for (var ei=0; ei<eqNodes.length-1; ei++) eqNodes[ei].connect(eqNodes[ei+1]);
-  eqNodes[eqNodes.length-1].connect(analyser);
+  /* v4 W-3: calibration is a permanent insert in the tail (master -> EQ -> calib -> analyser -> tame -> crossover -> comp -> limiter), never a disconnect. The insert starts flat; applyCalibAudio() sets the curve gains, at the same user actions as before. */
+  calibNodes = CAL_FREQS.map(function(f){ var b=ctx.createBiquadFilter(); b.type="peaking"; b.frequency.value=f; b.Q.value=1.1; b.gain.value=0; return b; });
+  eqNodes[eqNodes.length-1].connect(calibNodes[0]);
+  for (var ci=0; ci<calibNodes.length-1; ci++) calibNodes[ci].connect(calibNodes[ci+1]);
+  calibNodes[calibNodes.length-1].connect(analyser);
   var tame = ctx.createBiquadFilter(); tame.type = "peaking"; tame.frequency.value = 3800; tame.Q.value = 0.6; tame.gain.value = -2.5;
   var xsp = ctx.createChannelSplitter(2), xmg = ctx.createChannelMerger(2);
-  function xf(tp, fq){ var f2 = ctx.createBiquadFilter(); f2.type = tp; f2.frequency.value = fq; return f2; }
+  /* v4 W-2: Linkwitz-Riley 4th-order crossover — two cascaded Butterworth stages (Q=0.7071) per leg @100 Hz, so the HP and LP legs sum back in phase (flat for centred audio; the old single-biquad pair nulled at 100 Hz). */
+  function xf(tp, fq){ var a = ctx.createBiquadFilter(); a.type = tp; a.frequency.value = fq; a.Q.value = 0.7071; var b = ctx.createBiquadFilter(); b.type = tp; b.frequency.value = fq; b.Q.value = 0.7071; a.connect(b); return { head: a, tail: b }; }
   var hpL = xf("highpass",100), hpR = xf("highpass",100), lpL = xf("lowpass",100), lpR = xf("lowpass",100);
   var lowMix = ctx.createGain(); lowMix.gain.value = 0.5;
   var outL = ctx.createGain(), outR = ctx.createGain();
   analyser.connect(tame); tame.connect(xsp);
-  xsp.connect(hpL, 0); xsp.connect(lpL, 0); xsp.connect(hpR, 1); xsp.connect(lpR, 1);
-  hpL.connect(outL); hpR.connect(outR); lpL.connect(lowMix); lpR.connect(lowMix);
+  xsp.connect(hpL.head, 0); xsp.connect(lpL.head, 0); xsp.connect(hpR.head, 1); xsp.connect(lpR.head, 1);
+  hpL.tail.connect(outL); hpR.tail.connect(outR); lpL.tail.connect(lowMix); lpR.tail.connect(lowMix);
   lowMix.connect(outL); lowMix.connect(outR);
   outL.connect(xmg, 0, 0); outR.connect(xmg, 0, 1);
   var limiter = ctx.createDynamicsCompressor(); limiter.threshold.value = -1.5; limiter.ratio.value = 20; limiter.attack.value = 0.002; limiter.release.value = 0.2; limiter.knee.value = 0;
   xmg.connect(compNode); compNode.connect(limiter); limiter.connect(ctx.destination);
+  /* v4 W-1: dedicated binaural bus. Hard-panned carrier channels feed binMerger one ear each (see buildChannel) and rejoin at the compressor input, bypassing the crossover entirely so no carrier leaks into the wrong ear. binBus gain is slaved to the master level in setMaster. */
+  binMerger = ctx.createChannelMerger(2);
+  binBus = ctx.createGain(); binBus.gain.value = 0;
+  binMerger.connect(binBus); binBus.connect(compNode);
   bellBus = ctx.createGain(); bellBus.gain.value = 0; bellBus.connect(master);
   bellNode = { gain: bellBus, dead:false, timer:null, srcs:[], oscs:[] };
   EVENT_BUILDERS.bellTimer(bellNode, { every: 300 });
@@ -1393,6 +1409,7 @@ function ensureCtx(){
 function setMaster(v, t){
   if (!ctx) return;
   master.gain.setTargetAtTime(v, ctx.currentTime, t || 0.4);
+  if (binBus) binBus.gain.setTargetAtTime(v, ctx.currentTime, t || 0.4);
 }
 function play(){
   ensureCtx();
@@ -1676,6 +1693,7 @@ function startTimer(){
     $("timerPill").textContent = "Timer: " + fmtClock(left);
     if (left <= 10000 && left > 0 && ctx && state.playing){
       master.gain.setTargetAtTime(Math.pow(masterVol,1.5) * 0.9 * (left/10000), ctx.currentTime, 0.3);
+      if (binBus) binBus.gain.setTargetAtTime(Math.pow(masterVol,1.5) * 0.9 * (left/10000), ctx.currentTime, 0.3);
     }
     if (left <= 0){
       stopTimer(false); pause(0.1);
@@ -2102,16 +2120,9 @@ function calCurve(){
   return calVals.map(function(v){ var base = calMode==="thr" ? (50-v)*.24 : (v-50)*-.18; return Math.max(-12, Math.min(12, base*mode)); });
 }
 function applyCalibAudio(){
-  if (!ctx) return;
+  if (!ctx || !calibNodes) return;
+  /* v4 W-3: the calib filters are a permanent insert in the tail (built in ensureCtx); applying a curve only sets their gains. The tame filter, crossover, compressor and limiter stay in the path for the whole session. */
   var curve = calCurve();
-  if (!calibNodes){
-    calibNodes = CAL_FREQS.map(function(f){ var b=ctx.createBiquadFilter(); b.type="peaking"; b.frequency.value=f; b.Q.value=1.1; return b; });
-    try{ analyser.disconnect(); }catch(e){}
-    analyser.connect(calibNodes[0]);
-    for (var i=0;i<calibNodes.length-1;i++) calibNodes[i].connect(calibNodes[i+1]);
-    /* last calib node feeds the compressor: find it via a fresh gain bridge to destination path */
-    var bridge = ctx.createGain(); calibNodes[calibNodes.length-1].connect(bridge); bridge.connect(ctx.destination);
-  }
   calibNodes.forEach(function(b,i){ b.gain.setTargetAtTime(curve[i], ctx.currentTime, .05); });
 }
 $("calModeThr").addEventListener("click", function(){ calMode="thr"; this.setAttribute("aria-pressed","true"); $("calModeLoud").setAttribute("aria-pressed","false"); $("calHint").innerHTML="Threshold test: press Test, then raise each band's slider from zero until the tone is <em>just</em> audible. Quiet bands get boosted in your curve; sensitive bands get trimmed."; });
